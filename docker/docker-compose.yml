@@ -3,27 +3,27 @@ services:
     image: postgres:15.10
     container_name: game_progress_db
     restart: unless-stopped
-    stop_grace_period: 30s
-    stop_signal: SIGTERM
+    stop_grace_period: 30s       # Grace period before stopping container
+    stop_signal: SIGTERM          # Signal sent to stop PostgreSQL gracefully
 
     environment:
-      POSTGRES_USER: ${POSTGRES_SUPERUSER}
-      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=en_US.UTF-8"
+      POSTGRES_USER: ${POSTGRES_SUPERUSER}               # Superuser for admin tasks
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD} # Superuser password
+      POSTGRES_DB: ${POSTGRES_DB}                        # Default database
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=en_US.UTF-8" # Encoding and locale
 
     ports:
-      - "${DB_PORT:-5431}:5432"
+      - "${DB_PORT:-5431}:5432"  # Map external port to container port 5432
 
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data # Persist database data
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_SUPERUSER} -d ${POSTGRES_DB} || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 40s
+      start_period: 40s             # Time to wait for DB to be ready
 
     deploy:
       resources:
@@ -50,15 +50,15 @@ services:
     restart: unless-stopped
 
     environment:
-
       DATA_SOURCE_NAME: "postgresql://${POSTGRES_SUPERUSER}:${POSTGRES_SUPERUSER_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
+      # Connection string for monitoring PostgreSQL with Prometheus
 
     ports:
-      - "9187:9187"
+      - "9187:9187"  # Metrics exposed to Prometheus
 
     depends_on:
       postgres:
-        condition: service_healthy  #
+        condition: service_healthy  # Wait until PostgreSQL is healthy
 
     deploy:
       resources:
@@ -84,24 +84,24 @@ services:
 
     depends_on:
       postgres:
-        condition: service_healthy
+        condition: service_healthy  # Run migrations only after DB is ready
 
     environment:
-      FLYWAY_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
-      FLYWAY_USER: ${POSTGRES_SUPERUSER}
-      FLYWAY_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD}
-      FLYWAY_PLACEHOLDERS_GAME_APP_PASSWORD: ${GAME_APP_PASSWORD}
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB} # DB connection
+      FLYWAY_USER: ${POSTGRES_SUPERUSER}                        # Admin user
+      FLYWAY_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD}           # Password
+      FLYWAY_PLACEHOLDERS_GAME_APP_PASSWORD: ${GAME_APP_PASSWORD} # Placeholder for migration scripts
       FLYWAY_LOCATIONS: filesystem:/flyway/sql/migration,filesystem:/flyway/sql/seeds
-      FLYWAY_BASELINE_ON_MIGRATE: "true"
-      FLYWAY_VALIDATE_ON_MIGRATE: "true"
+      FLYWAY_BASELINE_ON_MIGRATE: "true"    # Baseline if DB exists
+      FLYWAY_VALIDATE_ON_MIGRATE: "true"    # Validate migrations before running
 
-    command: ["migrate"]
+    command: ["migrate"]  # Run migrations only
 
     volumes:
       - ${DB_MIGRATION_PATH}:/flyway/sql/migration:ro
       - ${DB_SEEDS_PATH}:/flyway/sql/seeds:ro
 
-    restart: "no"
+    restart: "no"  # One-off container
 
     deploy:
       resources:
@@ -133,19 +133,20 @@ services:
     stop_signal: SIGTERM
 
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
-      SPRING_DATASOURCE_PASSWORD: ${GAME_APP_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB} # DB URL
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}                           # App DB user
+      SPRING_DATASOURCE_PASSWORD: ${GAME_APP_PASSWORD}                        # App DB password
 
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE:-prod}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE:-prod} # Spring profile (dev/prod)
 
-      JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRATION: ${JWT_EXPIRATION}
+      JWT_SECRET: ${JWT_SECRET}            # JWT secret
+      JWT_EXPIRATION: ${JWT_EXPIRATION}    # Token expiration
 
       JAVA_OPTS: "-Xms256m -Xmx1g -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+      # JVM options tuned for Docker container
 
     ports:
-      - "${BACKEND_PORT:-8080}:8080"
+      - "${BACKEND_PORT:-8080}:8080"  # Expose backend port
 
     depends_on:
       postgres:
@@ -172,12 +173,11 @@ services:
     networks:
       - game_network
 
-
 volumes:
   pgdata:
-    name: game_progress_pgdata
+    name: game_progress_pgdata # Named volume for persistent DB data
 
 networks:
   game_network:
     name: game_network
-    driver: bridge
+    driver: bridge  # Default Docker bridge network
