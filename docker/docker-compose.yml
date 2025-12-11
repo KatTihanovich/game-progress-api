@@ -1,0 +1,183 @@
+services:
+  postgres:
+    image: postgres:15.10
+    container_name: game_progress_db
+    restart: unless-stopped
+    stop_grace_period: 30s
+    stop_signal: SIGTERM
+
+    environment:
+      POSTGRES_USER: ${POSTGRES_SUPERUSER}
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=en_US.UTF-8"
+
+    ports:
+      - "${DB_PORT:-5431}:5432"
+
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_SUPERUSER} -d ${POSTGRES_DB} || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=postgres,project=game_progress"
+
+    networks:
+      - game_network
+
+  postgres_exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: postgres_metrics
+    restart: unless-stopped
+
+    environment:
+
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_SUPERUSER}:${POSTGRES_SUPERUSER_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
+
+    ports:
+      - "9187:9187"
+
+    depends_on:
+      postgres:
+        condition: service_healthy  #
+
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.25'
+        reservations:
+          memory: 64M
+          cpus: '0.1'
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+    networks:
+      - game_network
+
+  flyway_migrations:
+    image: flyway/flyway:9.22.3-alpine
+    container_name: flyway_migrations
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      FLYWAY_USER: ${POSTGRES_SUPERUSER}
+      FLYWAY_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD}
+      FLYWAY_PLACEHOLDERS_GAME_APP_PASSWORD: ${GAME_APP_PASSWORD}
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql/migration,filesystem:/flyway/sql/seeds
+      FLYWAY_BASELINE_ON_MIGRATE: "true"
+      FLYWAY_VALIDATE_ON_MIGRATE: "true"
+
+    command: ["migrate"]
+
+    volumes:
+      - ${DB_MIGRATION_PATH}:/flyway/sql/migration:ro
+      - ${DB_SEEDS_PATH}:/flyway/sql/seeds:ro
+
+    restart: "no"
+
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+    networks:
+      - game_network
+
+  backend:
+    build:
+      context: ../gameApi
+      dockerfile: Dockerfile
+
+    image: game-progress-backend:1.0.0
+    container_name: game_progress_backend
+    restart: unless-stopped
+    stop_grace_period: 30s
+    stop_signal: SIGTERM
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${GAME_APP_PASSWORD}
+
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE:-prod}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+
+      JAVA_OPTS: "-Xms256m -Xmx1g -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      flyway_migrations:
+        condition: service_completed_successfully
+
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1.5G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=backend,project=game_progress"
+
+    networks:
+      - game_network
+
+
+volumes:
+  pgdata:
+    name: game_progress_pgdata
+
+networks:
+  game_network:
+    name: game_network
+    driver: bridge

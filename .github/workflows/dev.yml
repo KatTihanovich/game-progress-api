@@ -1,0 +1,60 @@
+name: Dev Environment CI/CD
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+jobs:
+  dev-push-pipeline:
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/Backend.yml
+    with:
+      ENVIRONMENT: dev
+      REGISTRY_URL: ${{ vars.DOCKER_REGISTRY_URL }}
+      REGISTRY_PATH: devteam/backend
+      REGISTRY_USERNAME: ${{ vars.DOCKER_REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ vars.DOCKER_REGISTRY_PASSWORD }}
+      REGISTRY_TAG: ${{ github.sha }}
+      PORTAINER_STAGE_WEBHOOK: ${{ vars.PORTAINER_DEV_WEBHOOK }}
+      FRONT_URL: ${{ vars.FRONT_URL }}
+      SKIP_DEPLOY: false
+      RUN_SERVICE_FOR_TESTS: false
+    secrets:
+      INTERNSHIP_API_KEY: ${{ secrets.INTERNSHIP_API_KEY}}
+      ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+      ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+      NEWSAPI_API_KEY: ${{ secrets.NEWSAPI_API_KEY }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+
+  dev-pr-check:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/Backend.yml
+    with:
+      ENVIRONMENT: dev
+      REGISTRY_URL: ${{ vars.DOCKER_REGISTRY_URL }}
+      REGISTRY_PATH: devteam/backend
+      REGISTRY_USERNAME: ${{ vars.DOCKER_REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ vars.DOCKER_REGISTRY_PASSWORD }}
+      REGISTRY_TAG: ${{ github.sha }}
+      PORTAINER_STAGE_WEBHOOK: ${{ vars.PORTAINER_DEV_WEBHOOK }}
+      FRONT_URL: ${{ vars.FRONT_URL }}
+      SKIP_DEPLOY: true
+      RUN_SERVICE_FOR_TESTS: false
+    secrets:
+      INTERNSHIP_API_KEY: ${{ secrets.INTERNSHIP_API_KEY}}
+      ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+      ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+      NEWSAPI_API_KEY: ${{ secrets.NEWSAPI_API_KEY }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+
