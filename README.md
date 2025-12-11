@@ -1,30 +1,8 @@
-# Analytics Dashboards Platform
+# Game progress API
 
-## Overview  
-This project aims to develop **interactive dashboards** that provide analytics for **teachers, students, and partners**.  
-The platform collects and visualizes data on:  
-- Practices and tools  
-- Companies and industries  
-- Countries and regions  
-- Market and technology trends  
+# Instructions how to use Docker
 
-The goal is to create a **continuously updated dashboard** that can be shown to partners or used internally for analysis.
-
----
-
-## Key Features  
-- 📊 **Dashboards & Analytics** – Visualize trends across technologies, markets, and industries.  
-- 🌍 **Global Data Coverage** – Analytics by companies, countries, and regions.  
-- 🔄 **Live Updates** – Data is automatically refreshed from integrated APIs.  
-- 🎓 **Opportunities & Learning** – Platform provides access to **open job positions** and **training programs** (via APIs).  
-- 🤝 **Partner Insights** – Tailored dashboards for industry and academic partners.  
-
----
-
-## Desired Outcomes  
-- A set of **market and technology trend visualizations**.  
-- Easy-to-use dashboards for stakeholders (teachers, students, partners).  
-- A **dynamic, always up-to-date platform** instead of static reports.  
-- Ability to **integrate with external APIs** for job postings and training programs.  
-
----
+1) Clone repositories with API and DB code so clone this one and from the link https://github.com/KatTihanovich/game_progress_db
+2) Use .env.example file to create .env and fill it with your enviroment variables. For paths to db migrations use this one where you cloned repository with db
+3) Then go to the terminal and to the folder docker where you need to run command *docker-compose up --build -d*
+4) Then it is possible to check the result with comand *docker-compose ps* or to post link *http://localhost:8080/actuator/health* into a browser. The status should be UP
