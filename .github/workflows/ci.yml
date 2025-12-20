@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - master
+      - dev
   workflow_dispatch:
 
 jobs:
@@ -25,6 +26,9 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
+
+      - name: Make mvnw executable
+        run: chmod +x mvnw
 
       - name: Build with Maven
         run: ./mvnw clean package -DskipTests
@@ -46,6 +50,9 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
+      - name: Make mvnw executable
+        run: chmod +x mvnw
+
       - name: Run Checkstyle
         run: ./mvnw checkstyle:check
 
@@ -65,6 +72,9 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
+
+      - name: Make mvnw executable
+        run: chmod +x mvnw
 
       - name: Run unit tests (@Tag("unit"))
         run: ./mvnw test -Dgroups=unit
@@ -86,6 +96,9 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
+      - name: Make mvnw executable
+        run: chmod +x mvnw
+
       - name: Run integration tests (@Tag("integration"))
         run: ./mvnw test -Dgroups=integration
 
@@ -106,6 +119,9 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
+
+      - name: Make mvnw executable
+        run: chmod +x mvnw
 
       - name: Run tests with JaCoCo
         run: ./mvnw test verify
