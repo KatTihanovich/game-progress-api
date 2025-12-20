@@ -4,13 +4,15 @@ import com.esdc.gameapi.domain.dto.LevelDto;
 import com.esdc.gameapi.domain.entity.Level;
 import com.esdc.gameapi.exception.ResourceNotFoundException;
 import com.esdc.gameapi.repository.LevelRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
+/**
+ * Service for managing game levels CRUD operations.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -18,6 +20,9 @@ public class LevelService {
 
   private final LevelRepository levelRepository;
 
+  /**
+   * Gets all levels.
+   */
   @Transactional(readOnly = true)
   public List<LevelDto> getAllLevels() {
     log.debug("Fetching all levels");
@@ -28,6 +33,9 @@ public class LevelService {
     return levels;
   }
 
+  /**
+   * Gets level by ID.
+   */
   @Transactional(readOnly = true)
   public LevelDto getLevelById(Long id) {
     log.debug("Fetching level by id: {}", id);
@@ -39,6 +47,9 @@ public class LevelService {
     return toDto(level);
   }
 
+  /**
+   * Creates new level.
+   */
   @Transactional
   public LevelDto createLevel(LevelDto dto) {
     log.info("Creating level: {}", dto.getLevelName());
@@ -54,6 +65,9 @@ public class LevelService {
     return toDto(saved);
   }
 
+  /**
+   * Updates existing level.
+   */
   @Transactional
   public LevelDto updateLevel(Long id, LevelDto dto) {
     log.info("Updating level: {}", id);
@@ -70,6 +84,9 @@ public class LevelService {
     return toDto(updated);
   }
 
+  /**
+   * Deletes level by ID.
+   */
   @Transactional
   public void deleteLevel(Long id) {
     log.info("Deleting level: {}", id);

@@ -1,11 +1,15 @@
 package com.esdc.gameapi.util;
 
 import com.esdc.gameapi.domain.AchievementConditionType;
-import lombok.Data;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.Data;
 
+/**
+ * Parses achievement condition descriptions into structured data.
+ *
+ * @see AchievementConditionType
+ */
 @Data
 public class AchievementConditionParser {
   private static final String NUMBER_REGEX = "(\\d+)";
@@ -15,6 +19,12 @@ public class AchievementConditionParser {
   private AchievementConditionType type;
   private Integer requiredValue;
 
+  /**
+   * Parses achievement condition description.
+   *
+   * @param description condition description
+   * @return parsed object or null
+   */
   public static AchievementConditionParser parse(String description) {
     if (description == null || description.isEmpty()) {
       return null;

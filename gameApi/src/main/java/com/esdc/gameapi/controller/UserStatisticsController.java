@@ -9,14 +9,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * REST controller for user statistics operations.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/statistics")
@@ -27,10 +33,13 @@ public class UserStatisticsController {
 
   private final UserStatisticsService statisticsService;
 
+  /**
+   * Gets user statistics by ID.
+   */
   @GetMapping("/{userId}")
   @Operation(summary = "Get user statistics",
-      description = "Returns overall user statistics: " +
-          "completed levels, play time, enemies, puzzles, stars")
+      description = "Returns overall user statistics: "
+          + "completed levels, play time, enemies, puzzles, stars")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Successfully retrieved statistics"),
       @ApiResponse(responseCode = "404", description = "Statistics not found")
@@ -50,10 +59,13 @@ public class UserStatisticsController {
         });
   }
 
+  /**
+   * Recalculates user statistics from progress.
+   */
   @PostMapping("/{userId}/recalculate")
   @Operation(summary = "Recalculate user statistics",
-      description = "Recalculates all statistics based on progress. " +
-          "Automatically called when creating new progress")
+      description = "Recalculates all statistics based on progress. "
+          + "Automatically called when creating new progress")
   @ApiResponse(responseCode = "200", description = "Statistics recalculated")
   public ResponseEntity<UserStatisticsDto> recalculateStatistics(
       @Parameter(description = "User ID")
@@ -63,6 +75,10 @@ public class UserStatisticsController {
     log.info("Statistics recalculated successfully for user: {}", userId);
     return ResponseEntity.ok(statistics);
   }
+
+  /**
+   * Gets maximum possible stars across all levels.
+   */
 
   @GetMapping("/max-stars")
   @Operation(summary = "Get maximum possible stars",
@@ -77,6 +93,9 @@ public class UserStatisticsController {
     return ResponseEntity.ok(response);
   }
 
+  /**
+   * Gets user stars progress with percentage.
+   */
   @GetMapping("/{userId}/stars-progress")
   @Operation(summary = "Get stars progress",
       description = "Returns current stars, maximum, and progress percentage")

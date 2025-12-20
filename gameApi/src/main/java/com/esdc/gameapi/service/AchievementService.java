@@ -2,21 +2,32 @@ package com.esdc.gameapi.service;
 
 import com.esdc.gameapi.domain.dto.AchievementDto;
 import com.esdc.gameapi.domain.dto.UserAchievementDto;
-import com.esdc.gameapi.domain.entity.*;
+import com.esdc.gameapi.domain.entity.Achievement;
+import com.esdc.gameapi.domain.entity.Level;
+import com.esdc.gameapi.domain.entity.Progress;
+import com.esdc.gameapi.domain.entity.User;
+import com.esdc.gameapi.domain.entity.UserAchievement;
+import com.esdc.gameapi.domain.entity.UserStatistics;
 import com.esdc.gameapi.exception.ResourceNotFoundException;
-import com.esdc.gameapi.repository.*;
+import com.esdc.gameapi.repository.AchievementRepository;
+import com.esdc.gameapi.repository.LevelRepository;
+import com.esdc.gameapi.repository.UserAchievementRepository;
+import com.esdc.gameapi.repository.UserRepository;
+import com.esdc.gameapi.repository.UserStatisticsRepository;
 import com.esdc.gameapi.util.AchievementConditionParser;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service for managing game achievements and unlock conditions.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -40,28 +51,43 @@ public class AchievementService {
   private final UserStatisticsRepository userStatisticsRepository;
   private final LevelRepository levelRepository;
 
+  /**
+   * Gets all achievements.
+   */
   @Transactional(readOnly = true)
   public List<AchievementDto> getAllAchievements() {
     log.debug("Fetching all achievements");
-    List<AchievementDto> achievements = achievementRepository.findAll().stream()
+    List<AchievementDto> achievements = achievementRepository.findAll()
+        .stream()
         .map(this::toDto)
         .collect(Collectors.toList());
     log.debug("Found {} achievements", achievements.size());
     return achievements;
   }
 
+  /**
+   * Gets user achievements by ID.
+   */
   @Transactional(readOnly = true)
   public List<UserAchievementDto> getAchievementsByUserId(Long userId) {
     log.debug("Fetching achievements for user: {}", userId);
-    List<UserAchievementDto> userAchievements = userAchievementRepository.findByUserId(userId).stream()
+    List<UserAchievementDto> userAchievements = userAchievementRepository.findByUserId(userId)
+        .stream()
         .map(this::toUserAchievementDto)
         .collect(Collectors.toList());
     log.debug("User {} has {} achievements", userId, userAchievements.size());
     return userAchievements;
   }
 
+  /**
+   * Checks and unlocks achievements after progress.
+   */
   @Transactional
-  public List<UserAchievementDto> checkAndUnlockAchievements(Long userId, Long levelId, Progress currentProgress) {
+  public List<UserAchievementDto> checkAndUnlockAchievements(
+      Long userId,
+      Long levelId,
+      Progress currentProgress
+  ) {
     log.info("Checking achievements for userId: {}, levelId: {}", userId, levelId);
 
     User user = userRepository.findById(userId)
@@ -129,6 +155,9 @@ public class AchievementService {
     return newlyUnlocked;
   }
 
+  /**
+   * Creates new achievement.
+   */
   @Transactional
   public AchievementDto createAchievement(AchievementDto dto) {
     log.info("Creating achievement: {}", dto.getAchievementName());
@@ -143,6 +172,9 @@ public class AchievementService {
     return toDto(saved);
   }
 
+  /**
+   * Updates existing achievement.
+   */
   @Transactional
   public AchievementDto updateAchievement(Long id, AchievementDto dto) {
     log.info("Updating achievement: {}", id);
@@ -158,6 +190,9 @@ public class AchievementService {
     return toDto(updated);
   }
 
+  /**
+   * Deletes achievement by ID.
+   */
   @Transactional
   public void deleteAchievement(Long id) {
     log.info("Deleting achievement: {}", id);
@@ -182,18 +217,24 @@ public class AchievementService {
         return stats != null && stats.getTotalSolvedPuzzles() >= condition.getRequiredValue();
 
       case TOTAL_TIME:
-        if (stats == null) return false;
+        if (stats == null) {
+          return false;
+        }
         int totalMinutes = convertTimeToMinutes(stats.getTotalTimePlayed());
         return totalMinutes >= condition.getRequiredValue();
 
       case LEVEL_ENEMIES:
-        return latestProgress != null && latestProgress.getKilledEnemiesNumber() >= condition.getRequiredValue();
+        return latestProgress != null
+            && latestProgress.getKilledEnemiesNumber() >= condition.getRequiredValue();
 
       case LEVEL_PUZZLES:
-        return latestProgress != null && latestProgress.getSolvedPuzzlesNumber() >= condition.getRequiredValue();
+        return latestProgress != null
+            && latestProgress.getSolvedPuzzlesNumber() >= condition.getRequiredValue();
 
       case LEVEL_TIME:
-        if (latestProgress == null) return false;
+        if (latestProgress == null) {
+          return false;
+        }
         int seconds = convertTimeToSeconds(latestProgress.getTimeSpent());
         return seconds <= condition.getRequiredValue();
 
@@ -260,7 +301,11 @@ public class AchievementService {
         .achievementId(ua.getAchievement().getId())
         .achievementName(ua.getAchievement().getAchievementName())
         .achievementDescription(ua.getAchievement().getAchievementDescription())
-        .createdAt(ua.getCreatedAt() != null ? ua.getCreatedAt().toString() : LocalDateTime.now().toString())
+        .createdAt(
+            ua.getCreatedAt() != null
+                ? ua.getCreatedAt().toString()
+                : LocalDateTime.now().toString()
+        )
         .build();
   }
 }

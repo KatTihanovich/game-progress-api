@@ -11,36 +11,34 @@ import com.esdc.gameapi.repository.LevelRepository;
 import com.esdc.gameapi.repository.ProgressRepository;
 import com.esdc.gameapi.repository.UserRepository;
 import com.esdc.gameapi.repository.UserStatisticsRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+/**
+ * Service for managing user game statistics and progress calculations.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserStatisticsService {
 
-  // Time conversion constants
   private static final int SECONDS_PER_MINUTE = 60;
   private static final int SECONDS_PER_HOUR = 3600;
 
-  // Time format parsing constants
   private static final String TIME_DELIMITER = ":";
   private static final int TIME_HOURS_INDEX = 0;
   private static final int TIME_MINUTES_INDEX = 1;
   private static final int TIME_SECONDS_INDEX = 2;
   private static final String TIME_FORMAT = "%02d:%02d:%02d";
 
-  // Percentage and rounding constants
   private static final double PERCENTAGE_MULTIPLIER = 100.0;
   private static final double ROUNDING_PRECISION = 100.0;
 
-  // Default values
   private static final int DEFAULT_STARS = 0;
   private static final int DEFAULT_TIME_SECONDS = 0;
   private static final int DEFAULT_MAX_STARS = 0;
@@ -51,12 +49,18 @@ public class UserStatisticsService {
   private final UserRepository userRepository;
   private final LevelRepository levelRepository;
 
+  /**
+   * Gets user statistics by ID.
+   */
   @Transactional(readOnly = true)
   public Optional<UserStatisticsDto> getStatisticsByUserId(Long userId) {
     return statisticsRepository.findByUserId(userId)
         .map(this::toDto);
   }
 
+  /**
+   * Recalculates and saves user statistics.
+   */
   @Transactional
   public UserStatisticsDto recalculateUserStatistics(Long userId) {
     log.info("Recalculating statistics for user {}", userId);
@@ -93,11 +97,14 @@ public class UserStatisticsService {
     statistics.setTotalStars(totalStars);
 
     UserStatistics savedStatistics = statisticsRepository.save(statistics);
-    log.info("Statistics updated for user {}: {} levels, {} stars", userId, totalLevelsCompleted, totalStars);
+    log.info("Stats updated for user{}:{}levels,{}stars", userId, totalLevelsCompleted, totalStars);
 
     return toDto(savedStatistics);
   }
 
+  /**
+   * Calculates total stars across all levels.
+   */
   private int calculateTotalStars(Long userId, List<Progress> allProgress) {
     int totalStars = DEFAULT_STARS;
 
@@ -129,6 +136,9 @@ public class UserStatisticsService {
     return totalStars;
   }
 
+  /**
+   * Gets maximum possible stars for all levels.
+   */
   @Transactional(readOnly = true)
   public int getMaxPossibleStars() {
     List<Level> allLevels = levelRepository.findAll();
@@ -137,6 +147,9 @@ public class UserStatisticsService {
         .sum();
   }
 
+  /**
+   * Calculates stars progress percentage.
+   */
   @Transactional(readOnly = true)
   public double getStarsProgressPercentage(Long userId) {
     UserStatistics statistics = statisticsRepository.findByUserId(userId)
@@ -151,6 +164,9 @@ public class UserStatisticsService {
     return roundToTwoDecimals(percentage);
   }
 
+  /**
+   * Gets detailed stars progress info.
+   */
   @Transactional(readOnly = true)
   public StarsProgressDto getStarsProgress(Long userId) {
     UserStatistics statistics = statisticsRepository.findByUserId(userId)

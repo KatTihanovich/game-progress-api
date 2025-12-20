@@ -3,17 +3,19 @@ package com.esdc.gameapi.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import javax.crypto.SecretKey;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+/**
+ * JWT token utility for generation, validation and claim extraction.
+ */
 @Slf4j
 @Component
 public class JwtUtil {
@@ -28,14 +30,23 @@ public class JwtUtil {
     return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
   }
 
+  /**
+   * Extracts username from JWT token.
+   */
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);
   }
 
+  /**
+   * Extracts token expiration date.
+   */
   public Date extractExpiration(String token) {
     return extractClaim(token, Claims::getExpiration);
   }
 
+  /**
+   * Extracts custom claim from token.
+   */
   public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
     final Claims claims = extractAllClaims(token);
     return claimsResolver.apply(claims);
@@ -53,6 +64,9 @@ public class JwtUtil {
     return extractExpiration(token).before(new Date());
   }
 
+  /**
+   * Generates JWT token for user.
+   */
   public String generateToken(String nickname, Long userId) {
     log.debug("Generating JWT token for user: {} (ID: {})", nickname, userId);
     Map<String, Object> claims = new HashMap<>();
@@ -61,6 +75,7 @@ public class JwtUtil {
     log.debug("JWT token generated successfully for user: {}", nickname);
     return token;
   }
+
 
   private String createToken(Map<String, Object> claims, String subject) {
     return Jwts.builder()
@@ -72,6 +87,9 @@ public class JwtUtil {
         .compact();
   }
 
+  /**
+   * Validates token against username.
+   */
   public Boolean validateToken(String token, String nickname) {
     try {
       final String username = extractUsername(token);

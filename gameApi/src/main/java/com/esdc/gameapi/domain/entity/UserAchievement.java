@@ -1,17 +1,33 @@
 package com.esdc.gameapi.domain.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDateTime;
 
+/**
+ * Junction entity linking users to unlocked achievements.
+ */
 @Getter
 @Setter
 @Entity
 @Table(
     name = "users_achievements",
     indexes = {
-        @Index(name = "idx_users_achievements_user_achievement", columnList = "user_id, achievement_id")
+        @Index(name = "idx_users_achievements_user_achievement",
+            columnList = "user_id, achievement_id")
     },
     uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "achievement_id"})
@@ -40,6 +56,9 @@ public class UserAchievement {
   public UserAchievement() {
   }
 
+  /**
+   * Constructor with user and achievement.
+   */
   public UserAchievement(User user, Achievement achievement) {
     this.user = user;
     this.achievement = achievement;

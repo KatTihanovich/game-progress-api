@@ -1,13 +1,15 @@
 package com.esdc.gameapi.security;
 
 import com.esdc.gameapi.domain.entity.User;
+import java.util.Collection;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
-
+/**
+ * UserDetails implementation for game users.
+ */
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 

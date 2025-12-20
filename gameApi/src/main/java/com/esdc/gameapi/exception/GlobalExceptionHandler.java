@@ -5,6 +5,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -23,10 +26,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+/**
+ * Class for global exception handling.
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -37,7 +39,7 @@ public class GlobalExceptionHandler {
   private boolean debugMode;
 
   /**
-   * Централизованная обработка всех кастомных исключений ApplicationException
+   * Centralised handling of all custom ApplicationException exceptions.
    */
   @ExceptionHandler(ApplicationException.class)
   public ResponseEntity<ErrorResponse> handleApplicationException(
@@ -61,7 +63,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Authentication exceptions (401)
+   * Authentication exceptions (401).
    */
   @ExceptionHandler({
       BadCredentialsException.class,
@@ -86,7 +88,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * JWT exceptions (401)
+   * JWT exceptions (401).
    */
   @ExceptionHandler({
       ExpiredJwtException.class,
@@ -100,10 +102,10 @@ public class GlobalExceptionHandler {
 
     log.warn("JWT error: {} at {}", ex.getMessage(), request.getRequestURI());
 
-    String message = ex instanceof ExpiredJwtException ?
-        "JWT token has expired" : "Invalid JWT token";
-    String code = ex instanceof ExpiredJwtException ?
-        "JWT_EXPIRED" : "JWT_INVALID";
+    String message = ex instanceof ExpiredJwtException
+        ? "JWT token has expired" : "Invalid JWT token";
+    String code = ex instanceof ExpiredJwtException
+        ? "JWT_EXPIRED" : "JWT_INVALID";
 
     ErrorResponse error = buildErrorResponse(
         HttpStatus.UNAUTHORIZED,
@@ -117,7 +119,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Spring Security Access denied (403)
+   * Spring Security Access denied (403).
    */
   @ExceptionHandler(AccessDeniedException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -139,7 +141,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Validation errors (400)
+   * Validation errors (400).
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -152,8 +154,8 @@ public class GlobalExceptionHandler {
         .stream()
         .collect(Collectors.toMap(
             FieldError::getField,
-            error -> error.getDefaultMessage() != null ?
-                error.getDefaultMessage() : "Invalid value",
+            error -> error.getDefaultMessage() != null
+                ? error.getDefaultMessage() : "Invalid value",
             (existing, replacement) -> existing
         ));
 
@@ -173,7 +175,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * IllegalArgumentException (400)
+   * IllegalArgumentException (400).
    */
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -195,7 +197,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Malformed JSON (400)
+   * Malformed JSON (400).
    */
   @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -217,7 +219,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Missing request parameters (400)
+   * Missing request parameters (400).
    */
   @ExceptionHandler(MissingServletRequestParameterException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -241,7 +243,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Type mismatch (400)
+   * Type mismatch (400).
    */
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -267,7 +269,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Endpoint not found (404)
+   * Endpoint not found (404).
    */
   @ExceptionHandler(NoHandlerFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -290,6 +292,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }
 
+  /**
+   * handle method not supported.
+   */
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
   @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
   public ResponseEntity<ErrorResponse> handleMethodNotSupported(
@@ -316,7 +321,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * All other exceptions (500)
+   * All other exceptions (500).
    */
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -338,7 +343,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Build error response
+   * Build error response.
    */
   private ErrorResponse buildErrorResponse(
       HttpStatus status,
@@ -358,10 +363,12 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Get stack trace for debug mode
+   * Get stack trace for debug mode.
    */
   private String getStackTrace(Exception ex) {
-    if (ex == null) return null;
+    if (ex == null) {
+      return null;
+    }
 
     StringBuilder sb = new StringBuilder(ex.toString()).append("\n");
     for (StackTraceElement element : ex.getStackTrace()) {

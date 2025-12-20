@@ -8,24 +8,24 @@ import com.esdc.gameapi.exception.ResourceNotFoundException;
 import com.esdc.gameapi.repository.LevelRepository;
 import com.esdc.gameapi.repository.ProgressRepository;
 import com.esdc.gameapi.repository.UserRepository;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
+/**
+ * Service for managing user progress on game levels.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProgressService {
 
-  // Date/Time format constants
   private static final String DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
   private static final String TIME_VALIDATION_REGEX = "^([0-9]{2}):([0-5][0-9]):([0-5][0-9])$";
 
-  // Validation constants
   private static final int MIN_STARS = 0;
 
   private final ProgressRepository progressRepository;
@@ -34,6 +34,9 @@ public class ProgressService {
   private final UserStatisticsService userStatisticsService;
   private final AchievementService achievementService;
 
+  /**
+   * Creates new progress record and updates statistics.
+   */
   @Transactional
   public ProgressDto createProgress(Long userId, ProgressDto request) {
     log.info("Creating progress for user: {}, level: {}", userId, request.getLevelId());
@@ -77,6 +80,9 @@ public class ProgressService {
     return toDto(savedProgress);
   }
 
+  /**
+   * Gets latest progress for user and level.
+   */
   @Transactional(readOnly = true)
   public ProgressDto getLatestProgressByUserAndLevel(Long userId, Long levelId) {
     log.debug("Fetching latest progress for user: {}, level: {}", userId, levelId);
@@ -99,13 +105,20 @@ public class ProgressService {
         .max((p1, p2) -> p1.getCreatedAt().compareTo(p2.getCreatedAt()))
         .orElseThrow(() -> {
           log.warn("No progress found for user {} on level {}", userId, levelId);
-          return new ResourceNotFoundException("Progress", "userId and levelId", userId + ", " + levelId);
+          return new ResourceNotFoundException(
+              "Progress",
+              "userId and levelId",
+              userId + ", " + levelId
+          );
         });
 
     log.debug("Latest progress found for user {} on level {}", userId, levelId);
     return toDto(latestProgress, level.getLevelName());
   }
 
+  /**
+   * Gets all progress for user.
+   */
   @Transactional(readOnly = true)
   public List<ProgressDto> getProgressByUserId(Long userId) {
     log.debug("Fetching all progress for user: {}", userId);
@@ -116,6 +129,9 @@ public class ProgressService {
     return progressList;
   }
 
+  /**
+   * Gets total stars for user on specific level.
+   */
   @Transactional(readOnly = true)
   public Integer getTotalStarsByUserAndLevel(Long userId, Long levelId) {
     log.debug("Calculating total stars for user: {}, level: {}", userId, levelId);

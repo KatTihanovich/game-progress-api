@@ -17,6 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service for user authentication and management.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,9 @@ public class UserService {
   private final JwtUtil jwtUtil;
   private final AuthenticationManager authenticationManager;
 
+  /**
+   * Registers new user and generates JWT token.
+   */
   @Transactional
   public AuthResponse register(UserRegistrationDto dto) {
     log.info("Attempting to register user: {}", dto.getNickname());
@@ -52,6 +58,9 @@ public class UserService {
         .build();
   }
 
+  /**
+   * Authenticates user and generates JWT token.
+   */
   @Transactional(readOnly = true)
   public AuthResponse login(UserLoginDto dto) {
     log.info("Attempting to login user: {}", dto.getNickname());
@@ -73,6 +82,9 @@ public class UserService {
         .build();
   }
 
+  /**
+   * Updates existing user data.
+   */
   @Transactional
   public UserResponseDto updateUser(Long userId, UserRegistrationDto dto) {
     log.info("Attempting to update user: {}", userId);
@@ -90,6 +102,9 @@ public class UserService {
     return toResponseDto(updatedUser);
   }
 
+  /**
+   * Deletes user by ID.
+   */
   @Transactional
   public void deleteUser(Long userId) {
     log.info("Attempting to delete user: {}", userId);
@@ -101,6 +116,9 @@ public class UserService {
     log.info("User deleted successfully: {}", userId);
   }
 
+  /**
+   * Gets user nickname by ID.
+   */
   @Transactional(readOnly = true)
   public String getUserNickname(Long userId) {
     log.debug("Fetching nickname for user: {}", userId);

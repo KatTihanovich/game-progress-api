@@ -17,6 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Spring Security configuration for JWT authentication.
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -25,14 +28,25 @@ public class SecurityConfig {
   private final JwtAuthenticationFilter jwtAuthFilter;
   private final UserDetailsService userDetailsService;
 
+  /**
+   * Configures security filter chain with JWT and public endpoints.
+   */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/users/register", "/api/users/login").permitAll()
-            .requestMatchers("/api/achievements/create", "/api/achievements/update/", "api/achievements/delete/").permitAll()
-            .requestMatchers("/api/levels/create", "/api/levels/", "/api/levels/delete/").permitAll()
+            .requestMatchers(
+                "/api/achievements/create",
+                "/api/achievements/update/",
+                "/api/achievements/delete/"
+            ).permitAll()
+            .requestMatchers(
+                "/api/levels/create",
+                "/api/levels/",
+                "/api/levels/delete/"
+            ).permitAll()
             .requestMatchers("/actuator/**").permitAll()
             .requestMatchers("/actuator/health/**").permitAll()
             .requestMatchers("/actuator/info/**").permitAll()
@@ -49,11 +63,17 @@ public class SecurityConfig {
     return http.build();
   }
 
+  /**
+   * Provides BCrypt password encoder.
+   */
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
+  /**
+   * Configures DAO authentication provider.
+   */
   @Bean
   public AuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -62,8 +82,13 @@ public class SecurityConfig {
     return authProvider;
   }
 
+  /**
+   * Exposes authentication manager bean.
+   */
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+  public AuthenticationManager authenticationManager(
+      AuthenticationConfiguration config
+  ) throws Exception {
     return config.getAuthenticationManager();
   }
 }
