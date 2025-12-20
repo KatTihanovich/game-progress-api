@@ -3,11 +3,12 @@ name: Backend CI
 on:
   pull_request:
     branches:
-      - main
+      - master
   push:
     branches:
-      - main
-      - develop
+      - master
+      - dev
+  workflow_dispatch:
 
 jobs:
   build:
