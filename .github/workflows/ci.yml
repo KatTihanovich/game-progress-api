@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - master
-      - dev
   workflow_dispatch:
 
 jobs:
@@ -15,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: gameApi
 
     steps:
       - uses: actions/checkout@v4
@@ -35,7 +34,7 @@ jobs:
     needs: build
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: gameApi
 
     steps:
       - uses: actions/checkout@v4
@@ -55,7 +54,7 @@ jobs:
     needs: lint
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: gameApi
 
     steps:
       - uses: actions/checkout@v4
@@ -75,7 +74,7 @@ jobs:
     needs: unit-tests
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: gameApi
 
     steps:
       - uses: actions/checkout@v4
@@ -96,7 +95,7 @@ jobs:
     needs: integration-tests
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: gameApi
 
     steps:
       - uses: actions/checkout@v4
@@ -115,4 +114,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: backend/target/site/jacoco
+          path: gameApi/target/site/jacoco
