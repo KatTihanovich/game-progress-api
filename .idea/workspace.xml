@@ -4,7 +4,104 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a51f742-76d6-4167-a209-d5d2ea08bcca" name="Changes" comment="" />
+    <list default="true" id="3a51f742-76d6-4167-a209-d5d2ea08bcca" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/ci.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/dto/StarsProgressDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/exception/ApplicationException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/exception/BadRequestException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/exception/DuplicateResourceException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/exception/ForbiddenException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/exception/ResourceNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/exception/UnauthorizedException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/controller/integration/AchievementControllerIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/controller/integration/LevelControllerIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/controller/integration/ProgressControllerIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/controller/integration/UserControllerIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/controller/integration/UserStatisticsControllerIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/controller/unit/AchievementControllerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/controller/unit/LevelControllerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/controller/unit/ProgressControllerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/controller/unit/UserControllerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/controller/unit/UserStatisticsControllerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/security/CustomUserDetailsServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/security/CustomUserDetailsTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/security/JwtUtilTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/security/SecurityIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service/integration/AchievementServiceIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service/integration/LevelServiceIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service/integration/ProgressServiceIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service/integration/UserServiceIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service/integration/UserStatisticsServiceIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service/unit/AchievementServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service/unit/LevelServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service/unit/ProgressServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service/unit/UserServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service/unit/UserStatisticsServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/util/AchievementConditionParserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/Backend.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/dev.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/prod.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/a26fa3e7-18cf-4972-86ed-b024178746e1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/a26fa3e7-18cf-4972-86ed-b024178746e1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/BackendApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/BackendApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/controller/AchievementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/controller/AchievementController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/controller/LevelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/controller/LevelController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/controller/ProgressController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/controller/ProgressController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/controller/UserStatisticsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/controller/UserStatisticsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/AchievementConditionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/AchievementConditionType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/dto/AchievementDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/dto/AchievementDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/dto/AuthResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/dto/AuthResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/dto/ErrorResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/dto/ErrorResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/dto/LevelDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/dto/LevelDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/dto/ProgressDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/dto/ProgressDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/dto/UserAchievementDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/dto/UserAchievementDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/dto/UserLoginDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/dto/UserLoginDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/dto/UserRegistrationDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/dto/UserRegistrationDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/dto/UserResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/dto/UserResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/dto/UserStatisticsDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/dto/UserStatisticsDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/entity/Achievement.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/entity/Achievement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/entity/Level.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/entity/Level.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/entity/Progress.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/entity/Progress.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/entity/UserAchievement.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/entity/UserAchievement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/domain/entity/UserStatistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/domain/entity/UserStatistics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/repository/AchievementRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/repository/AchievementRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/repository/LevelRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/repository/LevelRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/repository/ProgressRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/repository/ProgressRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/repository/UserAchievementRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/repository/UserAchievementRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/repository/UserStatisticsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/repository/UserStatisticsRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/security/CustomUserDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/security/CustomUserDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/security/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/security/CustomUserDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/security/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/security/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/security/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/security/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/security/OpenApiConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/security/OpenApiConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/service/AchievementService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/service/AchievementService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/service/LevelService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/service/LevelService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/service/ProgressService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/service/ProgressService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/service/UserStatisticsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/service/UserStatisticsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameApi/util/AchievementConditionParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/java/com/esdc/gameapi/util/AchievementConditionParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameApi/repository/AchievementRepositoryTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameApi/repository/BaseRepositoryTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameApi/repository/LevelRepositoryTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameApi/repository/ProgressRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/repository/ProgressRepositoryTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameApi/repository/UserAchievementRepositoryTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameApi/repository/UserRepositoryTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameApi/repository/UserStatisticsRepositoryTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/src/test/resources/test.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/src/test/resources/test.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/target/checkstyle-cachefile" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/target/checkstyle-cachefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/target/checkstyle-result.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/target/checkstyle-result.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gameApi/target/test-classes/test.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gameApi/target/test-classes/test.properties" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,10 +117,13 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service/unit/AchievementServiceTest.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -44,11 +144,60 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "JUnit.All in gameApi.executor": "Run",
+    "JUnit.AchievementConditionParserTest.executor": "Run",
+    "JUnit.AchievementControllerIntegrationTest.executor": "Run",
+    "JUnit.AchievementControllerIntegrationTest.shouldHandleLongAchievementDescription.executor": "Run",
+    "JUnit.AchievementControllerTest.executor": "Run",
+    "JUnit.AchievementControllerTest.shouldHandleUserWithMultipleUnlockedAchievements.executor": "Run",
+    "JUnit.AchievementControllerTest.shouldRejectCreationWithoutAdminPasswordHeader.executor": "Run",
+    "JUnit.AchievementControllerTest.shouldRejectDeletionWithoutAdminPasswordHeader.executor": "Run",
+    "JUnit.AchievementServiceIntegrationTest.executor": "Run",
+    "JUnit.AchievementServiceTest.executor": "Run",
+    "JUnit.AchievementServiceTest.shouldHandleDefeatBossWhenLevelHasNoBoss.executor": "Run",
+    "JUnit.AchievementServiceTest.shouldUnlockAchievementForDefeatBoss.executor": "Run",
+    "JUnit.All in gameApi.executor": "Coverage",
+    "JUnit.CustomUserDetailsServiceTest.executor": "Run",
+    "JUnit.CustomUserDetailsTest.executor": "Run",
+    "JUnit.JwtUtilTest.executor": "Run",
+    "JUnit.LevelControllerIntegrationTest$CreateLevelTests$SecurityTests.executor": "Run",
+    "JUnit.LevelControllerIntegrationTest.executor": "Run",
+    "JUnit.LevelControllerTest.executor": "Run",
+    "JUnit.LevelServiceIntegrationTest.executor": "Run",
+    "JUnit.LevelServiceTest.executor": "Run",
+    "JUnit.ProgressControllerIntegrationTest.executor": "Run",
+    "JUnit.ProgressControllerTest.executor": "Run",
+    "JUnit.ProgressRepositoryTest.executor": "Run",
+    "JUnit.ProgressServiceIntegrationTest.executor": "Run",
+    "JUnit.ProgressServiceIntegrationTest.shouldReturnNullWhenNoProgressExistsForTotalStars.executor": "Run",
+    "JUnit.ProgressServiceTest.executor": "Run",
+    "JUnit.SecurityIntegrationTest.executor": "Run",
+    "JUnit.UserControllerIntegrationTest.executor": "Run",
+    "JUnit.UserControllerTest.executor": "Run",
     "JUnit.UserRepositoryTest.executor": "Run",
+    "JUnit.UserServiceIntegrationTest.executor": "Run",
+    "JUnit.UserServiceIntegrationTest.shouldUpdateUpdatedAtTimestampWhenUpdatingUser.executor": "Run",
+    "JUnit.UserServiceTest.executor": "Run",
+    "JUnit.UserStatisticsControllerIntegrationTest$EdgeCasesTests.executor": "Run",
+    "JUnit.UserStatisticsControllerIntegrationTest.executor": "Run",
+    "JUnit.UserStatisticsControllerTest.executor": "Run",
+    "JUnit.UserStatisticsServiceIntegrationTest.executor": "Run",
+    "JUnit.UserStatisticsServiceTest.executor": "Run",
+    "JUnit.com.esdc.gameapi.security in gameApi.executor": "Run",
+    "JUnit.controller in gameApi.executor": "Run",
+    "JUnit.integration in gameApi.executor": "Run",
+    "JUnit.java in gameApi.executor": "Run",
+    "JUnit.security in gameApi.executor": "Run",
+    "JUnit.service in gameApi.executor": "Run",
+    "JUnit.unit in gameApi.executor": "Run",
+    "JUnit.util in gameApi.executor": "Run",
     "Maven.backend [clean].executor": "Run",
     "Maven.gameApi [clean].executor": "Run",
     "Maven.gameApi [compile].executor": "Run",
+    "Maven.gameApi [org.apache.maven.plugins:maven-checkstyle-plugin:3.5.0:check].executor": "Run",
+    "Maven.gameApi [org.owasp:dependency-check-maven:11.1.0:check].executor": "Run",
+    "Maven.gameApi [org.owasp:dependency-check-maven:9.0.9:check].executor": "Run",
+    "Maven.gameApi [test].executor": "Run",
+    "Maven.gameApi [verify].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
@@ -57,7 +206,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.BackendApplication.executor": "Run",
-    "git-widget-placeholder": "feature/test-covarage-fix",
+    "git-widget-placeholder": "dev",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/User/IdeaProjects/game-progress-api",
     "node.js.detected.package.eslint": "true",
@@ -68,7 +217,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "preferences.sourceCode.Java",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -82,11 +231,43 @@
       <recent name="C:\Users\User\IdeaProjects\game-progress-api\docker" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.BackendApplication">
-    <configuration name="All in gameApi" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.java in gameApi">
+    <configuration name="controller in gameApi" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gameApi" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/controller" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="java in gameApi" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="gameApi" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/gameApi/src/test/java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="security in gameApi" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="gameApi" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/security" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="service in gameApi" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="gameApi" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/service" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="util in gameApi" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="gameApi" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/gameApi/src/test/java/com/esdc/gameapi/util" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -108,17 +289,31 @@
       <envs>
         <env name="DB_HOST" value="localhost" />
         <env name="DB_PORT" value="5431" />
+        <env name="JWT_EXPIRATION" value="86400000" />
+        <env name="JWT_SECRET" value="your-very-long-secret-key-at-least-256-bits-for-HS256-algorithm-security" />
         <env name="POSTGRES_DB" value="game_progress_db" />
         <env name="POSTGRES_PASSWORD" value="159357" />
         <env name="POSTGRES_USER" value="game_app" />
-        <env name="JWT_EXPIRATION" value="86400000" />
-        <env name="JWT_SECRET" value="your-very-long-secret-key-at-least-256-bits-for-HS256-algorithm-security" />
+        <env name="NVD_API_KEY" value="3ca90b3f-55b0-437c-8564-acbdeba14add" />
       </envs>
       <option name="envFilePaths">
         <option value="$PROJECT_DIR$/../student-practice-job-service/.env" />
       </option>
       <module name="gameApi" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.esdc.gameApi.BackendApplication" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.esdc.gameapi.BackendApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="envFilePaths">
+        <option value="$PROJECT_DIR$/../student-practice-job-service/.env" />
+      </option>
+      <module name="gameApi" />
+      <selectedOptions>
+        <option name="environmentVariables" />
+      </selectedOptions>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.esdc.gameapi.BackendApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -136,13 +331,21 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.All in gameApi" />
+      <item itemvalue="JUnit.controller in gameApi" />
+      <item itemvalue="JUnit.java in gameApi" />
+      <item itemvalue="JUnit.security in gameApi" />
+      <item itemvalue="JUnit.service in gameApi" />
+      <item itemvalue="JUnit.util in gameApi" />
       <item itemvalue="Spring Boot.BackendApplication" />
       <item itemvalue="Spring Boot.BackendApplication (1)" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.All in gameApi" />
+        <item itemvalue="JUnit.java in gameApi" />
+        <item itemvalue="JUnit.service in gameApi" />
+        <item itemvalue="JUnit.controller in gameApi" />
+        <item itemvalue="JUnit.util in gameApi" />
+        <item itemvalue="JUnit.security in gameApi" />
       </list>
     </recent_temporary>
   </component>
@@ -167,7 +370,12 @@
       <workItem from="1765385963955" duration="3985000" />
       <workItem from="1765390782326" duration="3589000" />
       <workItem from="1765440556602" duration="5767000" />
-      <workItem from="1765448829939" duration="13531000" />
+      <workItem from="1765448829939" duration="16317000" />
+      <workItem from="1765536891618" duration="599000" />
+      <workItem from="1765803251341" duration="27561000" />
+      <workItem from="1765970725263" duration="9040000" />
+      <workItem from="1766157454602" duration="4871000" />
+      <workItem from="1766230157684" duration="3405000" />
     </task>
     <servers />
   </component>
@@ -190,6 +398,6 @@
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/game_progress_api$All_in_gameApi.ic" NAME="All in gameApi Coverage Results" MODIFIED="1765460865612" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/game_progress_api$All_in_gameApi.ic" NAME="All in gameApi Coverage Results" MODIFIED="1765983142936" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
