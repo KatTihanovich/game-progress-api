@@ -1,0 +1,121 @@
+name: Backend CI
+
+on:
+  pull_request:
+    branches: [master, dev]
+  push:
+    branches: [master, dev]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: gameApi
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/maven-setup
+
+      - name: Build with Maven
+        run: ./mvnw clean package -DskipTests
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gameapi-jar-${{ github.sha }}
+          path: gameApi/target/*.jar
+          retention-days: 7
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: build
+    defaults:
+      run:
+        working-directory: gameApi
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/maven-setup
+
+      - name: Run Checkstyle
+        run: ./mvnw checkstyle:check
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: lint
+    defaults:
+      run:
+        working-directory: gameApi
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/maven-setup
+
+      - name: Run unit tests (@Tag("unit"))
+        run: ./mvnw test -Dgroups=unit
+
+      - name: Upload unit test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-reports-${{ github.sha }}
+          path: gameApi/target/surefire-reports/
+          retention-days: 7
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    defaults:
+      run:
+        working-directory: gameApi
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/maven-setup
+
+      - name: Run integration tests (@Tag("integration"))
+        run: ./mvnw test -Dgroups=integration
+
+      - name: Upload integration test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-reports-${{ github.sha }}
+          path: gameApi/target/surefire-reports/
+          retention-days: 7
+
+  coverage-and-sonar:
+    name: JaCoCo coverage + SonarCloud
+    runs-on: ubuntu-latest
+    needs: integration-tests
+    defaults:
+      run:
+        working-directory: gameApi
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/maven-setup
+
+      - name: Run tests with coverage
+        run: ./mvnw verify
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: gameApi
+          args: >
+            -Dsonar.organization=kattihanovich
+            -Dsonar.projectKey=KatTihanovich_game-progress-api
+            -Dsonar.sources=src/main/java
+            -Dsonar.tests=src/test/java
+            -Dsonar.java.binaries=target/classes
+            -Dsonar.junit.reportPaths=target/surefire-reports
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+            -Dsonar.verbose=true
+  
+

@@ -1,0 +1,47 @@
+package com.esdc.gameapi.security;
+
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * OpenAPI/Swagger configuration for API documentation.
+ */
+@Configuration
+public class OpenApiConfig {
+
+  /**
+   * Configures OpenAPI with JWT security scheme.
+   */
+  @Bean
+  public OpenAPI customOpenApi() {
+    final String securitySchemeName = "bearerAuth";
+
+    return new OpenAPI()
+        .info(new Info()
+            .title("Game API")
+            .version("1.0")
+            .description("REST API for games with levels, progress and achievements")
+            .contact(new Contact()
+                .name("Catherine")
+                .email("tsikhanovich.work@gmail.com"))
+            .license(new License()
+                .name("Apache 2.0")
+                .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
+        .addSecurityItem(new SecurityRequirement()
+            .addList(securitySchemeName))
+        .components(new Components()
+            .addSecuritySchemes(securitySchemeName, new SecurityScheme()
+                .name(securitySchemeName)
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .description("Enter the JWT token")));
+  }
+}

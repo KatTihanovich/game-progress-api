@@ -1,0 +1,23 @@
+name: 'Maven Setup'
+description: 'Checkout + JDK21 + Maven cache для gameApi'
+inputs:
+  java-version:
+    description: 'JDK version'
+    required: false
+    default: '21'
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK ${{ inputs.java-version }}
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ inputs.java-version }}
+        cache: 'maven'
+
+    - name: Make mvnw executable
+      shell: bash
+      run: chmod +x gameApi/mvnw
+      working-directory: ${{ github.workspace }}

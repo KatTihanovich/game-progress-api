@@ -78,6 +78,20 @@ services:
     networks:
       - game_network
 
+  prometheus:
+    image: prom/prometheus:v2.55.0
+    container_name: game_prometheus
+    restart: unless-stopped
+
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+    ports:
+      - "9090:9090"
+
+    networks:
+      - game_network
+
   flyway_migrations:
     image: flyway/flyway:9.22.3-alpine
     container_name: flyway_migrations
