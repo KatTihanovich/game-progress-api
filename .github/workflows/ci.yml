@@ -129,7 +129,8 @@ jobs:
         with:
           args: >
             -Dsonar.organization=KatTihanovich
-            -Dsonar.projectKey=game-progress-api
-            -Dsonar.sources=gameApi/src/main/java
-            -Dsonar.tests=gameApi/src/test/java
-            -Dsonar.java.binaries=gameApi/target/classes
+            -Dsonar.projectKey=KatTihanovich_game-progress-api
+            -Dsonar.sources=src/main/java
+            -Dsonar.tests=src/test/java
+            -Dsonar.java.binaries=target/classes
+

@@ -27,8 +27,9 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<springdoc.version>2.7.0</springdoc.version>
-		<selenium.version>4.25.0</selenium.version>
 		<opencsv.version>5.9</opencsv.version>
+
+		<sonar.organization>kattihanovich</sonar.organization>
 	</properties>
 
 	<dependencies>
@@ -156,16 +157,7 @@
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- Selenium -->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			<version>${selenium.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-	</dependencies>
+			</dependencies>
 
 	<build>
 		<plugins>
