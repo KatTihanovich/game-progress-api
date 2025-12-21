@@ -126,3 +126,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=KatTihanovich
+            -Dsonar.projectKey=game-progress-api
+            -Dsonar.sources=gameApi/src/main/java
+            -Dsonar.tests=gameApi/src/test/java
+            -Dsonar.java.binaries=gameApi/target/classes
