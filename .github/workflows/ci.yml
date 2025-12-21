@@ -113,13 +113,10 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    defaults:
-      run:
-        working-directory: gameApi
     steps:
       - uses: actions/checkout@v4
-
-      - uses: ./.github/actions/maven-setup
+        with:
+          fetch-depth: 0
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v3
@@ -127,10 +124,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
+          projectBaseDir: gameApi
           args: >
             -Dsonar.organization=KatTihanovich
             -Dsonar.projectKey=KatTihanovich_game-progress-api
             -Dsonar.sources=src/main/java
             -Dsonar.tests=src/test/java
             -Dsonar.java.binaries=target/classes
+  
 
