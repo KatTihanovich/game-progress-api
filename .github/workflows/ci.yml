@@ -126,7 +126,7 @@ jobs:
         with:
           projectBaseDir: gameApi
           args: >
-            -Dsonar.organization=KatTihanovich
+            -Dsonar.organization=kattihanovich
             -Dsonar.projectKey=KatTihanovich_game-progress-api
             -Dsonar.sources=src/main/java
             -Dsonar.tests=src/test/java
