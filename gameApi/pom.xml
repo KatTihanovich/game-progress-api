@@ -28,7 +28,9 @@
 
 		<springdoc.version>2.7.0</springdoc.version>
 		<opencsv.version>5.9</opencsv.version>
-
+		<sonar.coverage.jacoco.xmlReportPaths>
+			target/site/jacoco/jacoco.xml
+		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.organization>kattihanovich</sonar.organization>
 	</properties>
 
