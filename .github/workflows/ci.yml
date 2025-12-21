@@ -84,8 +84,8 @@ jobs:
           path: gameApi/target/surefire-reports/
           retention-days: 7
 
-  coverage:
-    name: JaCoCo coverage + quality gate
+  coverage-and-sonar:
+    name: JaCoCo coverage + SonarCloud
     runs-on: ubuntu-latest
     needs: integration-tests
     defaults:
@@ -93,30 +93,13 @@ jobs:
         working-directory: gameApi
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: ./.github/actions/maven-setup
 
-      - name: Run coverage quality gate (mvn verify)
+      - name: Run tests with coverage
         run: ./mvnw verify
-
-      - name: Upload JaCoCo HTML report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report-${{ github.sha }}
-          path: gameApi/target/site/jacoco
-          retention-days: 7
-
-  sonarcloud:
-    name: SonarCloud Security Analysis
-    runs-on: ubuntu-latest
-    needs: coverage
-    permissions:
-      contents: read
-      security-events: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v3
@@ -134,4 +117,5 @@ jobs:
             -Dsonar.junit.reportPaths=target/surefire-reports
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
             -Dsonar.verbose=true
+  
 
