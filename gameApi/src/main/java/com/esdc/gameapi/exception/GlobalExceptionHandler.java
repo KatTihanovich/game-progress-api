@@ -269,6 +269,26 @@ public class GlobalExceptionHandler {
   }
 
   /**
+   * Unauthorized handle.
+   */
+  @ExceptionHandler(UnauthorizedException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public ResponseEntity<ErrorResponse> handleUnauthorized(
+      UnauthorizedException ex,
+      HttpServletRequest request) {
+
+    ErrorResponse error = buildErrorResponse(
+        HttpStatus.UNAUTHORIZED,
+        ex.getMessage(),
+        "UNAUTHORIZED",
+        request.getRequestURI(),
+        ex
+    );
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+  }
+
+
+  /**
    * Endpoint not found (404).
    */
   @ExceptionHandler(NoHandlerFoundException.class)

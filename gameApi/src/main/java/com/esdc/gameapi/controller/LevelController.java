@@ -1,7 +1,7 @@
 package com.esdc.gameapi.controller;
 
 import com.esdc.gameapi.domain.dto.LevelDto;
-import com.esdc.gameapi.exception.UnauthorizedException;
+import com.esdc.gameapi.service.AdminAuthService;
 import com.esdc.gameapi.service.LevelService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +30,8 @@ public class LevelController {
   private static final String ADMIN_PASSWORD_HEADER = "Admin-Password";
 
   private final LevelService levelService;
+  private final AdminAuthService adminAuthService;
+
 
   @Value("${admin.password}")
   private String adminPassword;
@@ -59,7 +61,7 @@ public class LevelController {
   public ResponseEntity<LevelDto> createLevel(
       @RequestHeader(ADMIN_PASSWORD_HEADER) String password,
       @RequestBody LevelDto dto) {
-    validateAdminPassword(password);
+    adminAuthService.validateAdminPassword(password);
     log.info("Admin creating level: {}", dto.getLevelName());
     LevelDto created = levelService.createLevel(dto);
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -73,7 +75,7 @@ public class LevelController {
       @RequestHeader(ADMIN_PASSWORD_HEADER) String password,
       @PathVariable Long id,
       @RequestBody LevelDto dto) {
-    validateAdminPassword(password);
+    adminAuthService.validateAdminPassword(password);
     log.info("Admin updating level: {}", id);
     LevelDto updated = levelService.updateLevel(id, dto);
     return ResponseEntity.ok(updated);
@@ -86,16 +88,9 @@ public class LevelController {
   public ResponseEntity<Void> deleteLevel(
       @RequestHeader(ADMIN_PASSWORD_HEADER) String password,
       @PathVariable Long id) {
-    validateAdminPassword(password);
+    adminAuthService.validateAdminPassword(password);
     log.info("Admin deleting level: {}", id);
     levelService.deleteLevel(id);
     return ResponseEntity.noContent().build();
-  }
-
-  private void validateAdminPassword(String password) {
-    if (!adminPassword.equals(password)) {
-      log.warn("Invalid admin password attempt");
-      throw new UnauthorizedException("Invalid admin password");
-    }
   }
 }

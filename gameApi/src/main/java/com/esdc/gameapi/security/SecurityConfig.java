@@ -39,13 +39,13 @@ public class SecurityConfig {
             .requestMatchers("/api/users/register", "/api/users/login").permitAll()
             .requestMatchers(
                 "/api/achievements/create",
-                "/api/achievements/update/",
-                "/api/achievements/delete/"
+                "/api/achievements/update/**",
+                "/api/achievements/delete/**"
             ).permitAll()
             .requestMatchers(
                 "/api/levels/create",
-                "/api/levels/",
-                "/api/levels/delete/"
+                "/api/levels/update/**",
+                "/api/levels/delete/**"
             ).permitAll()
             .requestMatchers("/actuator/**").permitAll()
             .requestMatchers("/actuator/health/**").permitAll()

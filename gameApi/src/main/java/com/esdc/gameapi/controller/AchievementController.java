@@ -2,8 +2,8 @@ package com.esdc.gameapi.controller;
 
 import com.esdc.gameapi.domain.dto.AchievementDto;
 import com.esdc.gameapi.domain.dto.UserAchievementDto;
-import com.esdc.gameapi.exception.UnauthorizedException;
 import com.esdc.gameapi.service.AchievementService;
+import com.esdc.gameapi.service.AdminAuthService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +31,7 @@ public class AchievementController {
   private static final String ADMIN_PASSWORD_HEADER = "Admin-Password";
 
   private final AchievementService achievementService;
+  private final AdminAuthService adminAuthService;
 
   @Value("${admin.password}")
   private String adminPassword;
@@ -60,7 +61,7 @@ public class AchievementController {
   public ResponseEntity<AchievementDto> createAchievement(
       @RequestHeader(ADMIN_PASSWORD_HEADER) String password,
       @RequestBody AchievementDto dto) {
-    validateAdminPassword(password);
+    adminAuthService.validateAdminPassword(password);
     log.info("Admin creating achievement: {}", dto.getAchievementName());
     AchievementDto created = achievementService.createAchievement(dto);
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -74,7 +75,7 @@ public class AchievementController {
       @RequestHeader(ADMIN_PASSWORD_HEADER) String password,
       @PathVariable Long id,
       @RequestBody AchievementDto dto) {
-    validateAdminPassword(password);
+    adminAuthService.validateAdminPassword(password);
     log.info("Admin updating achievement: {}", id);
     AchievementDto updated = achievementService.updateAchievement(id, dto);
     return ResponseEntity.ok(updated);
@@ -87,16 +88,9 @@ public class AchievementController {
   public ResponseEntity<Void> deleteAchievement(
       @RequestHeader(ADMIN_PASSWORD_HEADER) String password,
       @PathVariable Long id) {
-    validateAdminPassword(password);
+    adminAuthService.validateAdminPassword(password);
     log.info("Admin deleting achievement: {}", id);
     achievementService.deleteAchievement(id);
     return ResponseEntity.noContent().build();
-  }
-
-  private void validateAdminPassword(String password) {
-    if (!adminPassword.equals(password)) {
-      log.warn("Invalid admin password attempt");
-      throw new UnauthorizedException("Invalid admin password");
-    }
   }
 }

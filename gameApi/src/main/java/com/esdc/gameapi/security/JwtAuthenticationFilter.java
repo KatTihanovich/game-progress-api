@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 /**
  * JWT authentication filter for extracting and validating tokens.
@@ -22,11 +23,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-  private static final int BEARER_PREFIX_LENGTH = 7;
 
+  private static final int BEARER_PREFIX_LENGTH = 7;
 
   private final JwtUtil jwtUtil;
   private final UserDetailsService userDetailsService;
+  private final HandlerExceptionResolver handlerExceptionResolver;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request,
@@ -58,12 +60,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           log.debug("User authenticated successfully: {}", username);
         } else {
           log.warn("JWT token validation failed for user: {}", username);
+          throw new io.jsonwebtoken.MalformedJwtException("Invalid JWT token");
         }
       }
-    } catch (Exception e) {
-      log.error("JWT authentication error: {}", e.getMessage());
-    }
 
-    chain.doFilter(request, response);
+      chain.doFilter(request, response);
+    } catch (Exception ex) {
+      log.error("JWT authentication error: {}", ex.getMessage());
+      handlerExceptionResolver.resolveException(request, response, null, ex);
+    }
   }
 }
+
