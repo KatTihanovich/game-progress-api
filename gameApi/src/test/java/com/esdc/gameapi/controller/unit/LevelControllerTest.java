@@ -5,6 +5,7 @@ import com.esdc.gameapi.domain.dto.LevelDto;
 import com.esdc.gameapi.exception.GlobalExceptionHandler;
 import com.esdc.gameapi.exception.ResourceNotFoundException;
 import com.esdc.gameapi.service.LevelService;
+import com.esdc.gameapi.service.AdminAuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -41,6 +41,9 @@ class LevelControllerTest {
   @Mock
   private LevelService levelService;
 
+  @Mock
+  private AdminAuthService adminAuthService;
+
   @InjectMocks
   private LevelController levelController;
 
@@ -57,10 +60,6 @@ class LevelControllerTest {
   void setUp() {
     objectMapper = new ObjectMapper();
 
-    // ❗Установка admin password через рефлексию
-    ReflectionTestUtils.setField(levelController, "adminPassword", CORRECT_ADMIN_PASSWORD);
-
-    // ❗Standalone setup - без Spring контекста
     mockMvc = MockMvcBuilders.standaloneSetup(levelController)
         .setControllerAdvice(new GlobalExceptionHandler())
         .build();
@@ -87,14 +86,11 @@ class LevelControllerTest {
   class GetAllLevelsTests {
 
     @Test
-    @Tag("unit")
     @DisplayName("Should return all levels")
     void shouldReturnAllLevels() throws Exception {
-      // Arrange
       List<LevelDto> levels = Arrays.asList(testLevel1, testLevel2);
       when(levelService.getAllLevels()).thenReturn(levels);
 
-      // Act & Assert
       mockMvc.perform(get("/api/levels")
               .contentType(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())
@@ -113,13 +109,10 @@ class LevelControllerTest {
     }
 
     @Test
-    @Tag("unit")
     @DisplayName("Should return empty list when no levels exist")
     void shouldReturnEmptyListWhenNoLevelsExist() throws Exception {
-      // Arrange
       when(levelService.getAllLevels()).thenReturn(Collections.emptyList());
 
-      // Act & Assert
       mockMvc.perform(get("/api/levels")
               .contentType(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())
@@ -137,13 +130,10 @@ class LevelControllerTest {
   class GetLevelByIdTests {
 
     @Test
-    @Tag("unit")
     @DisplayName("Should return level by id")
     void shouldReturnLevelById() throws Exception {
-      // Arrange
       when(levelService.getLevelById(1L)).thenReturn(testLevel1);
 
-      // Act & Assert
       mockMvc.perform(get("/api/levels/1")
               .contentType(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())
@@ -157,14 +147,11 @@ class LevelControllerTest {
     }
 
     @Test
-    @Tag("unit")
     @DisplayName("Should return 404 when level not found")
     void shouldReturn404WhenLevelNotFound() throws Exception {
-      // Arrange
       when(levelService.getLevelById(999L))
           .thenThrow(new ResourceNotFoundException("Level", "id", 999L));
 
-      // Act & Assert
       mockMvc.perform(get("/api/levels/999")
               .contentType(MediaType.APPLICATION_JSON))
           .andExpect(status().isNotFound());
@@ -180,10 +167,8 @@ class LevelControllerTest {
   class CreateLevelTests {
 
     @Test
-    @Tag("unit")
     @DisplayName("Should create level with valid admin password")
     void shouldCreateLevelWithValidAdminPassword() throws Exception {
-      // Arrange
       LevelDto newLevel = LevelDto.builder()
           .levelName("Level 3")
           .starsOnLevel(4)
@@ -198,8 +183,8 @@ class LevelControllerTest {
           .build();
 
       when(levelService.createLevel(any(LevelDto.class))).thenReturn(createdLevel);
+      doNothing().when(adminAuthService).validateAdminPassword(CORRECT_ADMIN_PASSWORD);
 
-      // Act & Assert
       mockMvc.perform(post("/api/levels/create")
               .header(ADMIN_PASSWORD_HEADER, CORRECT_ADMIN_PASSWORD)
               .contentType(MediaType.APPLICATION_JSON)
@@ -211,42 +196,43 @@ class LevelControllerTest {
           .andExpect(jsonPath("$.starsOnLevel").value(4))
           .andExpect(jsonPath("$.bossOnLevel").value(false));
 
+      verify(adminAuthService, times(1))
+          .validateAdminPassword(CORRECT_ADMIN_PASSWORD);
       verify(levelService, times(1)).createLevel(any(LevelDto.class));
     }
 
     @Test
-    @Tag("unit")
     @DisplayName("Should reject creation with invalid admin password")
     void shouldRejectCreationWithInvalidAdminPassword() throws Exception {
-      // Arrange
       LevelDto newLevel = LevelDto.builder()
           .levelName("Level 3")
           .starsOnLevel(4)
           .bossOnLevel(false)
           .build();
 
-      // Act & Assert
+      doThrow(new com.esdc.gameapi.exception.UnauthorizedException("Invalid admin password"))
+          .when(adminAuthService).validateAdminPassword(INCORRECT_ADMIN_PASSWORD);
+
       mockMvc.perform(post("/api/levels/create")
               .header(ADMIN_PASSWORD_HEADER, INCORRECT_ADMIN_PASSWORD)
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(newLevel)))
           .andExpect(status().isUnauthorized());
 
+      verify(adminAuthService, times(1))
+          .validateAdminPassword(INCORRECT_ADMIN_PASSWORD);
       verify(levelService, never()).createLevel(any(LevelDto.class));
     }
 
     @Test
-    @Tag("unit")
     @DisplayName("Should reject creation without admin password header")
     void shouldRejectCreationWithoutAdminPasswordHeader() throws Exception {
-      // Arrange
       LevelDto newLevel = LevelDto.builder()
           .levelName("Level 3")
           .starsOnLevel(4)
           .bossOnLevel(false)
           .build();
 
-      // Act & Assert
       mockMvc.perform(post("/api/levels/create")
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(newLevel)))
@@ -256,10 +242,8 @@ class LevelControllerTest {
     }
 
     @Test
-    @Tag("unit")
     @DisplayName("Should create boss level")
     void shouldCreateBossLevel() throws Exception {
-      // Arrange
       LevelDto bossLevel = LevelDto.builder()
           .levelName("Boss Level")
           .starsOnLevel(10)
@@ -274,8 +258,8 @@ class LevelControllerTest {
           .build();
 
       when(levelService.createLevel(any(LevelDto.class))).thenReturn(createdBossLevel);
+      doNothing().when(adminAuthService).validateAdminPassword(CORRECT_ADMIN_PASSWORD);
 
-      // Act & Assert
       mockMvc.perform(post("/api/levels/create")
               .header(ADMIN_PASSWORD_HEADER, CORRECT_ADMIN_PASSWORD)
               .contentType(MediaType.APPLICATION_JSON)
@@ -284,6 +268,8 @@ class LevelControllerTest {
           .andExpect(jsonPath("$.bossOnLevel").value(true))
           .andExpect(jsonPath("$.starsOnLevel").value(10));
 
+      verify(adminAuthService, times(1))
+          .validateAdminPassword(CORRECT_ADMIN_PASSWORD);
       verify(levelService, times(1)).createLevel(any(LevelDto.class));
     }
   }
@@ -295,10 +281,8 @@ class LevelControllerTest {
   class UpdateLevelTests {
 
     @Test
-    @Tag("unit")
     @DisplayName("Should update level with valid admin password")
     void shouldUpdateLevelWithValidAdminPassword() throws Exception {
-      // Arrange
       LevelDto updateDto = LevelDto.builder()
           .levelName("Updated Level")
           .starsOnLevel(7)
@@ -313,8 +297,8 @@ class LevelControllerTest {
           .build();
 
       when(levelService.updateLevel(eq(1L), any(LevelDto.class))).thenReturn(updatedLevel);
+      doNothing().when(adminAuthService).validateAdminPassword(CORRECT_ADMIN_PASSWORD);
 
-      // Act & Assert
       mockMvc.perform(put("/api/levels/update/1")
               .header(ADMIN_PASSWORD_HEADER, CORRECT_ADMIN_PASSWORD)
               .contentType(MediaType.APPLICATION_JSON)
@@ -326,35 +310,38 @@ class LevelControllerTest {
           .andExpect(jsonPath("$.starsOnLevel").value(7))
           .andExpect(jsonPath("$.bossOnLevel").value(true));
 
-      verify(levelService, times(1)).updateLevel(eq(1L), any(LevelDto.class));
+      verify(adminAuthService, times(1))
+          .validateAdminPassword(CORRECT_ADMIN_PASSWORD);
+      verify(levelService, times(1))
+          .updateLevel(eq(1L), any(LevelDto.class));
     }
 
     @Test
-    @Tag("unit")
     @DisplayName("Should reject update with invalid admin password")
     void shouldRejectUpdateWithInvalidAdminPassword() throws Exception {
-      // Arrange
       LevelDto updateDto = LevelDto.builder()
           .levelName("Updated Level")
           .starsOnLevel(7)
           .bossOnLevel(true)
           .build();
 
-      // Act & Assert
+      doThrow(new com.esdc.gameapi.exception.UnauthorizedException("Invalid admin password"))
+          .when(adminAuthService).validateAdminPassword(INCORRECT_ADMIN_PASSWORD);
+
       mockMvc.perform(put("/api/levels/update/1")
               .header(ADMIN_PASSWORD_HEADER, INCORRECT_ADMIN_PASSWORD)
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(updateDto)))
           .andExpect(status().isUnauthorized());
 
+      verify(adminAuthService, times(1))
+          .validateAdminPassword(INCORRECT_ADMIN_PASSWORD);
       verify(levelService, never()).updateLevel(any(), any());
     }
 
     @Test
-    @Tag("unit")
     @DisplayName("Should return 404 when updating non-existent level")
     void shouldReturn404WhenUpdatingNonExistentLevel() throws Exception {
-      // Arrange
       LevelDto updateDto = LevelDto.builder()
           .levelName("Updated Level")
           .starsOnLevel(7)
@@ -363,15 +350,18 @@ class LevelControllerTest {
 
       when(levelService.updateLevel(eq(999L), any(LevelDto.class)))
           .thenThrow(new ResourceNotFoundException("Level", "id", 999L));
+      doNothing().when(adminAuthService).validateAdminPassword(CORRECT_ADMIN_PASSWORD);
 
-      // Act & Assert
       mockMvc.perform(put("/api/levels/update/999")
               .header(ADMIN_PASSWORD_HEADER, CORRECT_ADMIN_PASSWORD)
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(updateDto)))
           .andExpect(status().isNotFound());
 
-      verify(levelService, times(1)).updateLevel(eq(999L), any(LevelDto.class));
+      verify(adminAuthService, times(1))
+          .validateAdminPassword(CORRECT_ADMIN_PASSWORD);
+      verify(levelService, times(1))
+          .updateLevel(eq(999L), any(LevelDto.class));
     }
   }
 
@@ -382,53 +372,54 @@ class LevelControllerTest {
   class DeleteLevelTests {
 
     @Test
-    @Tag("unit")
     @DisplayName("Should delete level with valid admin password")
     void shouldDeleteLevelWithValidAdminPassword() throws Exception {
-      // Arrange
       doNothing().when(levelService).deleteLevel(1L);
+      doNothing().when(adminAuthService).validateAdminPassword(CORRECT_ADMIN_PASSWORD);
 
-      // Act & Assert
       mockMvc.perform(delete("/api/levels/delete/1")
               .header(ADMIN_PASSWORD_HEADER, CORRECT_ADMIN_PASSWORD))
           .andExpect(status().isNoContent());
 
+      verify(adminAuthService, times(1))
+          .validateAdminPassword(CORRECT_ADMIN_PASSWORD);
       verify(levelService, times(1)).deleteLevel(1L);
     }
 
     @Test
-    @Tag("unit")
     @DisplayName("Should reject deletion with invalid admin password")
     void shouldRejectDeletionWithInvalidAdminPassword() throws Exception {
-      // Act & Assert
+      doThrow(new com.esdc.gameapi.exception.UnauthorizedException("Invalid admin password"))
+          .when(adminAuthService).validateAdminPassword(INCORRECT_ADMIN_PASSWORD);
+
       mockMvc.perform(delete("/api/levels/delete/1")
               .header(ADMIN_PASSWORD_HEADER, INCORRECT_ADMIN_PASSWORD))
           .andExpect(status().isUnauthorized());
 
+      verify(adminAuthService, times(1))
+          .validateAdminPassword(INCORRECT_ADMIN_PASSWORD);
       verify(levelService, never()).deleteLevel(any());
     }
 
     @Test
-    @Tag("unit")
     @DisplayName("Should return 404 when deleting non-existent level")
     void shouldReturn404WhenDeletingNonExistentLevel() throws Exception {
-      // Arrange
+      doNothing().when(adminAuthService).validateAdminPassword(CORRECT_ADMIN_PASSWORD);
       doThrow(new ResourceNotFoundException("Level", "id", 999L))
           .when(levelService).deleteLevel(999L);
 
-      // Act & Assert
       mockMvc.perform(delete("/api/levels/delete/999")
               .header(ADMIN_PASSWORD_HEADER, CORRECT_ADMIN_PASSWORD))
           .andExpect(status().isNotFound());
 
+      verify(adminAuthService, times(1))
+          .validateAdminPassword(CORRECT_ADMIN_PASSWORD);
       verify(levelService, times(1)).deleteLevel(999L);
     }
 
     @Test
-    @Tag("unit")
     @DisplayName("Should reject deletion without admin password header")
     void shouldRejectDeletionWithoutAdminPasswordHeader() throws Exception {
-      // Act & Assert
       mockMvc.perform(delete("/api/levels/delete/1"))
           .andExpect(status().isInternalServerError());
 
@@ -443,10 +434,8 @@ class LevelControllerTest {
   class EdgeCasesTests {
 
     @Test
-    @Tag("unit")
     @DisplayName("Should handle level with zero stars")
     void shouldHandleLevelWithZeroStars() throws Exception {
-      // Arrange
       LevelDto zeroStarsLevel = LevelDto.builder()
           .id(5L)
           .levelName("Tutorial Level")
@@ -456,7 +445,6 @@ class LevelControllerTest {
 
       when(levelService.getLevelById(5L)).thenReturn(zeroStarsLevel);
 
-      // Act & Assert
       mockMvc.perform(get("/api/levels/5")
               .contentType(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())
@@ -466,10 +454,8 @@ class LevelControllerTest {
     }
 
     @Test
-    @Tag("unit")
     @DisplayName("Should handle multiple levels")
     void shouldHandleMultipleLevels() throws Exception {
-      // Arrange
       List<LevelDto> levels = Arrays.asList(
           LevelDto.builder()
               .id(1L)
@@ -493,7 +479,6 @@ class LevelControllerTest {
 
       when(levelService.getAllLevels()).thenReturn(levels);
 
-      // Act & Assert
       mockMvc.perform(get("/api/levels")
               .contentType(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())

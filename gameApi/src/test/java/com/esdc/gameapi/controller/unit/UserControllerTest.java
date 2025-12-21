@@ -54,7 +54,6 @@ class UserControllerTest {
   void setUp() {
     objectMapper = new ObjectMapper();
 
-    // ❗Standalone setup - без Spring контекста
     mockMvc = MockMvcBuilders.standaloneSetup(userController)
         .setControllerAdvice(new GlobalExceptionHandler())
         .build();
@@ -136,13 +135,13 @@ class UserControllerTest {
       UserRegistrationDto youngUser = UserRegistrationDto.builder()
           .nickname("younguser")
           .password("password123")
-          .age(1)
+          .age(10)
           .build();
 
       UserResponseDto youngUserResponse = UserResponseDto.builder()
           .id(2L)
           .nickname("younguser")
-          .age(1)
+          .age(10)
           .createdAt("2025-12-17T14:00:00")
           .updatedAt("2025-12-17T14:00:00")
           .build();
@@ -159,7 +158,7 @@ class UserControllerTest {
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(youngUser)))
           .andExpect(status().isCreated())
-          .andExpect(jsonPath("$.user.age").value(1));
+          .andExpect(jsonPath("$.user.age").value(10));
 
       verify(userService, times(1)).register(any(UserRegistrationDto.class));
     }

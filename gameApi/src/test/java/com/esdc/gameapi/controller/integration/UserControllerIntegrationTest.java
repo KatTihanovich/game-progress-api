@@ -37,7 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
     "spring.jpa.hibernate.ddl-auto=create-drop",
     "jwt.secret=mySecretKeyForTestingPurposesOnlyMustBeAtLeast256BitsLong",
-    "jwt.expiration=3600000"
+    "jwt.expiration=3600000",
+    "admin.password=testAdminPassword123"
 })
 class UserControllerIntegrationTest {
 
@@ -139,7 +140,7 @@ class UserControllerIntegrationTest {
       UserRegistrationDto registrationDto = UserRegistrationDto.builder()
           .nickname("younguser")
           .password("password123")
-          .age(1)
+          .age(10)
           .build();
 
       // Act & Assert
@@ -147,7 +148,7 @@ class UserControllerIntegrationTest {
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(registrationDto)))
           .andExpect(status().isCreated())
-          .andExpect(jsonPath("$.user.age").value(1));
+          .andExpect(jsonPath("$.user.age").value(10));
     }
 
     @Test

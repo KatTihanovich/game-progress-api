@@ -28,7 +28,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
     "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
     "spring.jpa.hibernate.ddl-auto=create-drop",
     "jwt.secret=mySecretKeyForTestingPurposesOnlyMustBeAtLeast256BitsLong",
-    "jwt.expiration=3600000"
+    "jwt.expiration=3600000",
+    "admin.password=testAdminPassword123"
 })
 @DisplayName("Level Service Integration Tests")
 class LevelServiceIntegrationTest {
