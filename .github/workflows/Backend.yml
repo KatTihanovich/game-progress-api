@@ -103,12 +103,6 @@ jobs:
             -Dsonar.junit.reportPaths=target/surefire-reports
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
             -Dsonar.verbose=true
-      - name: Upload JaCoCo XML report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report-${{ github.sha }}
-          path: gameApi/target/site/jacoco/
-          retention-days: 7
       - name: Upload full JaCoCo HTML report
         uses: actions/upload-artifact@v4
         with:
