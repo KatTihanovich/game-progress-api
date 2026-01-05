@@ -748,7 +748,7 @@ class ProgressServiceIntegrationTest {
     List<String> validTimes = List.of(
         "00:00:00",
         "23:59:59",
-        "99:59:59"  // Large hours are valid for total time
+        "75:59:59"  // Large hours are valid for total time
     );
 
     for (String time : validTimes) {

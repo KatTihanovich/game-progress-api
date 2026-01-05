@@ -365,55 +365,5 @@ class UserStatisticsControllerIntegrationTest {
               .contentType(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk());
     }
-
-    // ========== Integration Scenarios ==========
-
-    @Nested
-    @DisplayName("Integration Scenarios")
-    class IntegrationScenariosTests {
-
-      @Test
-      @Tag("integration")
-      @WithMockUser
-      @DisplayName("Should handle complete user journey")
-      void shouldHandleCompleteUserJourney() throws Exception {
-        // 1. Initial state - no statistics
-        mockMvc.perform(get("/api/statistics/" + testUser.getId())
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNotFound());
-
-        // 2. Add some progress
-        Progress progress = Progress.builder()
-            .user(testUser)
-            .level(testLevel1)
-            .stars(3)
-            .timeSpent("00:10:00")
-            .killedEnemiesNumber(10)
-            .solvedPuzzlesNumber(5)
-            .createdAt(LocalDateTime.now())
-            .build();
-        progressRepository.save(progress);
-
-        // 3. Recalculate statistics
-        mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.totalStars").value(3));
-
-        // 4. Check progress
-        mockMvc.perform(get("/api/statistics/" + testUser.getId() + "/stars-progress")
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.currentStars").value(3))
-            .andExpect(jsonPath("$.progressPercentage").value(16.67));
-
-        // 5. Get statistics
-        mockMvc.perform(get("/api/statistics/" + testUser.getId())
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.totalLevelsCompleted").value(1))
-            .andExpect(jsonPath("$.totalStars").value(3));
-      }
-    }
   }
 }

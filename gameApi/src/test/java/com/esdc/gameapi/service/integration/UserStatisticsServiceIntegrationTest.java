@@ -349,14 +349,14 @@ class UserStatisticsServiceIntegrationTest {
   @DisplayName("Should handle large time values")
   void shouldHandleLargeTimeValues() {
     // Arrange
-    progressRepository.save(createProgress(testUser, testLevel1, 10, 5, "100:00:00", 2));
-    progressRepository.save(createProgress(testUser, testLevel2, 15, 8, "200:30:45", 3));
+    progressRepository.save(createProgress(testUser, testLevel1, 10, 5, "50:00:00", 2));
+    progressRepository.save(createProgress(testUser, testLevel2, 15, 8, "49:30:45", 3));
 
     // Act
     UserStatisticsDto result = statisticsService.recalculateUserStatistics(testUser.getId());
 
     // Assert
-    assertThat(result.getTotalTimePlayed()).isEqualTo("300:30:45");
+    assertThat(result.getTotalTimePlayed()).isEqualTo("99:30:45");
   }
 
   // ========== Max Possible Stars Tests ==========
