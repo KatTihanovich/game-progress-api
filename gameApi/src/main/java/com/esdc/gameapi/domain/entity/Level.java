@@ -40,7 +40,7 @@ public class Level {
   @Column(name = "level_id")
   private Long id;
 
-  @Column(name = "level_name", nullable = false, unique = true)
+  @Column(name = "level_name", nullable = false, unique = true, columnDefinition = "TEXT")
   private String levelName;
 
   @Column(name = "boss_on_level", nullable = false)

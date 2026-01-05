@@ -184,241 +184,6 @@ class UserStatisticsControllerIntegrationTest {
     }
   }
 
-  // ========== POST Recalculate Statistics Tests ==========
-
-  @Nested
-  @DisplayName("POST /api/statistics/{userId}/recalculate - Recalculate Statistics")
-  class RecalculateStatisticsTests {
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should recalculate statistics from progress")
-    void shouldRecalculateStatisticsFromProgress() throws Exception {
-      // Arrange
-      Progress progress1 = Progress.builder()
-          .user(testUser)
-          .level(testLevel1)
-          .stars(3)
-          .timeSpent("00:10:30")
-          .killedEnemiesNumber(10)
-          .solvedPuzzlesNumber(5)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress1);
-
-      Progress progress2 = Progress.builder()
-          .user(testUser)
-          .level(testLevel2)
-          .stars(4)
-          .timeSpent("00:15:20")
-          .killedEnemiesNumber(15)
-          .solvedPuzzlesNumber(8)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress2);
-
-      // Act & Assert
-      mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-          .andExpect(jsonPath("$.totalLevelsCompleted").value(2))
-          .andExpect(jsonPath("$.totalTimePlayed").value("00:25:50"))
-          .andExpect(jsonPath("$.totalKilledEnemies").value(25))
-          .andExpect(jsonPath("$.totalSolvedPuzzles").value(13))
-          .andExpect(jsonPath("$.totalStars").value(7));
-    }
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should create statistics if not exists")
-    void shouldCreateStatisticsIfNotExists() throws Exception {
-      // Act & Assert
-      mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.totalLevelsCompleted").value(0))
-          .andExpect(jsonPath("$.totalTimePlayed").value("00:00:00"))
-          .andExpect(jsonPath("$.totalStars").value(0));
-    }
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should return 404 for non-existent user")
-    void shouldReturn404ForNonExistentUser() throws Exception {
-      // Act & Assert
-      mockMvc.perform(post("/api/statistics/999999/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should take best stars for each level")
-    void shouldTakeBestStarsForEachLevel() throws Exception {
-      // Arrange - Multiple attempts on same level
-      Progress progress1 = Progress.builder()
-          .user(testUser)
-          .level(testLevel1)
-          .stars(1)
-          .timeSpent("00:05:00")
-          .killedEnemiesNumber(5)
-          .solvedPuzzlesNumber(2)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress1);
-
-      Progress progress2 = Progress.builder()
-          .user(testUser)
-          .level(testLevel1)
-          .stars(3)
-          .timeSpent("00:10:00")
-          .killedEnemiesNumber(10)
-          .solvedPuzzlesNumber(5)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress2);
-
-      Progress progress3 = Progress.builder()
-          .user(testUser)
-          .level(testLevel1)
-          .stars(2)
-          .timeSpent("00:07:00")
-          .killedEnemiesNumber(7)
-          .solvedPuzzlesNumber(3)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress3);
-
-      // Act & Assert
-      mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.totalLevelsCompleted").value(1))
-          .andExpect(jsonPath("$.totalStars").value(3));
-    }
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should cap stars to level maximum")
-    void shouldCapStarsToLevelMaximum() throws Exception {
-      // Arrange - Stars exceeding level maximum
-      Progress progress = Progress.builder()
-          .user(testUser)
-          .level(testLevel1)
-          .stars(10) // Level max is 3
-          .timeSpent("00:05:00")
-          .killedEnemiesNumber(5)
-          .solvedPuzzlesNumber(2)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress);
-
-      // Act & Assert
-      mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.totalStars").value(3)); // Capped to max
-    }
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should sum time correctly across multiple levels")
-    void shouldSumTimeCorrectlyAcrossMultipleLevels() throws Exception {
-      // Arrange
-      Progress progress1 = Progress.builder()
-          .user(testUser)
-          .level(testLevel1)
-          .stars(3)
-          .timeSpent("01:30:45")
-          .killedEnemiesNumber(10)
-          .solvedPuzzlesNumber(5)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress1);
-
-      Progress progress2 = Progress.builder()
-          .user(testUser)
-          .level(testLevel2)
-          .stars(4)
-          .timeSpent("02:45:30")
-          .killedEnemiesNumber(20)
-          .solvedPuzzlesNumber(10)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress2);
-
-      // Act & Assert
-      mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.totalTimePlayed").value("04:16:15"));
-    }
-  }
-
-  // ========== GET Max Possible Stars Tests ==========
-
-  @Nested
-  @DisplayName("GET /api/statistics/max-stars - Get Max Possible Stars")
-  class GetMaxPossibleStarsTests {
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should return sum of all level stars")
-    void shouldReturnSumOfAllLevelStars() throws Exception {
-      // Act & Assert
-      mockMvc.perform(get("/api/statistics/max-stars")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-          .andExpect(jsonPath("$.maxPossibleStars").value(18)); // 3 + 5 + 10
-    }
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should return zero when no levels exist")
-    void shouldReturnZeroWhenNoLevelsExist() throws Exception {
-      // Arrange
-      levelRepository.deleteAll();
-
-      // Act & Assert
-      mockMvc.perform(get("/api/statistics/max-stars")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.maxPossibleStars").value(0));
-    }
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should update when new level is added")
-    void shouldUpdateWhenNewLevelIsAdded() throws Exception {
-      // Arrange
-      Level newLevel = Level.builder()
-          .levelName("Level 4")
-          .starsOnLevel(7)
-          .bossOnLevel(false)
-          .createdAt(LocalDateTime.now())
-          .updatedAt(LocalDateTime.now())
-          .build();
-      levelRepository.save(newLevel);
-
-      // Act & Assert
-      mockMvc.perform(get("/api/statistics/max-stars")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.maxPossibleStars").value(25)); // 3 + 5 + 10 + 7
-    }
-  }
-
   // ========== GET Stars Progress Tests ==========
 
   @Nested
@@ -533,90 +298,6 @@ class UserStatisticsControllerIntegrationTest {
   @Nested
   @DisplayName("Edge Cases")
   class EdgeCasesTests {
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should handle progress with empty time")
-    void shouldHandleProgressWithEmptyTime() throws Exception {
-      // Arrange
-      Progress progress = Progress.builder()
-          .user(testUser)
-          .level(testLevel1)
-          .stars(3)
-          .timeSpent("")
-          .killedEnemiesNumber(10)
-          .solvedPuzzlesNumber(5)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress);
-
-      // Act & Assert
-      mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.totalTimePlayed").value("00:00:00"));
-    }
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should handle very large time values")
-    void shouldHandleVeryLargeTimeValues() throws Exception {
-      // Arrange
-      Progress progress = Progress.builder()
-          .user(testUser)
-          .level(testLevel1)
-          .stars(3)
-          .timeSpent("99:59:59")
-          .killedEnemiesNumber(10)
-          .solvedPuzzlesNumber(5)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress);
-
-      // Act & Assert
-      mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.totalTimePlayed").value("99:59:59"));
-    }
-
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should handle time overflow correctly")
-    void shouldHandleTimeOverflowCorrectly() throws Exception {
-      // Arrange
-      Progress progress1 = Progress.builder()
-          .user(testUser)
-          .level(testLevel1)
-          .stars(3)
-          .timeSpent("00:45:30")
-          .killedEnemiesNumber(10)
-          .solvedPuzzlesNumber(5)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress1);
-
-      Progress progress2 = Progress.builder()
-          .user(testUser)
-          .level(testLevel2)
-          .stars(4)
-          .timeSpent("00:30:45")
-          .killedEnemiesNumber(15)
-          .solvedPuzzlesNumber(8)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress2);
-
-      // Act & Assert - 45:30 + 30:45 = 76:15 = 1:16:15
-      mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.totalTimePlayed").value("01:16:15"));
-    }
-
     @Test
     @Tag("integration")
     @WithMockUser
@@ -685,86 +366,54 @@ class UserStatisticsControllerIntegrationTest {
           .andExpect(status().isOk());
     }
 
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should allow authenticated users to recalculate statistics")
-    void shouldAllowAuthenticatedUsersToRecalculateStatistics() throws Exception {
-      // Act & Assert
-      mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk());
-    }
+    // ========== Integration Scenarios ==========
 
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should allow authenticated users to get max stars")
-    void shouldAllowAuthenticatedUsersToGetMaxStars() throws Exception {
-      // Act & Assert
-      mockMvc.perform(get("/api/statistics/max-stars")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk());
-    }
+    @Nested
+    @DisplayName("Integration Scenarios")
+    class IntegrationScenariosTests {
 
-    @Test
-    @Tag("integration")
-    @DisplayName("Should deny recalculation without authentication")
-    void shouldDenyRecalculationWithoutAuthentication() throws Exception {
-      // Act & Assert
-      mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isForbidden());
-    }
-  }
+      @Test
+      @Tag("integration")
+      @WithMockUser
+      @DisplayName("Should handle complete user journey")
+      void shouldHandleCompleteUserJourney() throws Exception {
+        // 1. Initial state - no statistics
+        mockMvc.perform(get("/api/statistics/" + testUser.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
 
-  // ========== Integration Scenarios ==========
+        // 2. Add some progress
+        Progress progress = Progress.builder()
+            .user(testUser)
+            .level(testLevel1)
+            .stars(3)
+            .timeSpent("00:10:00")
+            .killedEnemiesNumber(10)
+            .solvedPuzzlesNumber(5)
+            .createdAt(LocalDateTime.now())
+            .build();
+        progressRepository.save(progress);
 
-  @Nested
-  @DisplayName("Integration Scenarios")
-  class IntegrationScenariosTests {
+        // 3. Recalculate statistics
+        mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.totalStars").value(3));
 
-    @Test
-    @Tag("integration")
-    @WithMockUser
-    @DisplayName("Should handle complete user journey")
-    void shouldHandleCompleteUserJourney() throws Exception {
-      // 1. Initial state - no statistics
-      mockMvc.perform(get("/api/statistics/" + testUser.getId())
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isNotFound());
+        // 4. Check progress
+        mockMvc.perform(get("/api/statistics/" + testUser.getId() + "/stars-progress")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.currentStars").value(3))
+            .andExpect(jsonPath("$.progressPercentage").value(16.67));
 
-      // 2. Add some progress
-      Progress progress = Progress.builder()
-          .user(testUser)
-          .level(testLevel1)
-          .stars(3)
-          .timeSpent("00:10:00")
-          .killedEnemiesNumber(10)
-          .solvedPuzzlesNumber(5)
-          .createdAt(LocalDateTime.now())
-          .build();
-      progressRepository.save(progress);
-
-      // 3. Recalculate statistics
-      mockMvc.perform(post("/api/statistics/" + testUser.getId() + "/recalculate")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.totalStars").value(3));
-
-      // 4. Check progress
-      mockMvc.perform(get("/api/statistics/" + testUser.getId() + "/stars-progress")
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.currentStars").value(3))
-          .andExpect(jsonPath("$.progressPercentage").value(16.67));
-
-      // 5. Get statistics
-      mockMvc.perform(get("/api/statistics/" + testUser.getId())
-              .contentType(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.totalLevelsCompleted").value(1))
-          .andExpect(jsonPath("$.totalStars").value(3));
+        // 5. Get statistics
+        mockMvc.perform(get("/api/statistics/" + testUser.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.totalLevelsCompleted").value(1))
+            .andExpect(jsonPath("$.totalStars").value(3));
+      }
     }
   }
 }

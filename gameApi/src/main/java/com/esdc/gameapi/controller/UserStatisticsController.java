@@ -40,10 +40,6 @@ public class UserStatisticsController {
   @Operation(summary = "Get user statistics",
       description = "Returns overall user statistics: "
           + "completed levels, play time, enemies, puzzles, stars")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Successfully retrieved statistics"),
-      @ApiResponse(responseCode = "404", description = "Statistics not found")
-  })
   public ResponseEntity<UserStatisticsDto> getUserStatistics(
       @Parameter(description = "User ID")
       @PathVariable Long userId) {
@@ -60,49 +56,11 @@ public class UserStatisticsController {
   }
 
   /**
-   * Recalculates user statistics from progress.
-   */
-  @PostMapping("/{userId}/recalculate")
-  @Operation(summary = "Recalculate user statistics",
-      description = "Recalculates all statistics based on progress. "
-          + "Automatically called when creating new progress")
-  @ApiResponse(responseCode = "200", description = "Statistics recalculated")
-  public ResponseEntity<UserStatisticsDto> recalculateStatistics(
-      @Parameter(description = "User ID")
-      @PathVariable Long userId) {
-    log.info("Request to recalculate statistics for user: {}", userId);
-    UserStatisticsDto statistics = statisticsService.recalculateUserStatistics(userId);
-    log.info("Statistics recalculated successfully for user: {}", userId);
-    return ResponseEntity.ok(statistics);
-  }
-
-  /**
-   * Gets maximum possible stars across all levels.
-   */
-
-  @GetMapping("/max-stars")
-  @Operation(summary = "Get maximum possible stars",
-      description = "Returns the sum of all stars_on_level for all levels")
-  @ApiResponse(responseCode = "200", description = "Max stars retrieved")
-  public ResponseEntity<Map<String, Integer>> getMaxPossibleStars() {
-    log.debug("Request to get maximum possible stars");
-    int maxStars = statisticsService.getMaxPossibleStars();
-    Map<String, Integer> response = new HashMap<>();
-    response.put("maxPossibleStars", maxStars);
-    log.debug("Maximum possible stars: {}", maxStars);
-    return ResponseEntity.ok(response);
-  }
-
-  /**
    * Gets user stars progress with percentage.
    */
   @GetMapping("/{userId}/stars-progress")
   @Operation(summary = "Get stars progress",
       description = "Returns current stars, maximum, and progress percentage")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Progress retrieved"),
-      @ApiResponse(responseCode = "404", description = "Statistics not found")
-  })
   public ResponseEntity<StarsProgressDto> getStarsProgress(
       @Parameter(description = "User ID")
       @PathVariable Long userId) {

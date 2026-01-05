@@ -40,10 +40,10 @@ public class Achievement {
   @Column(name = "achievement_id")
   private Long id;
 
-  @Column(name = "achievement_name", nullable = false, unique = true)
+  @Column(name = "achievement_name", nullable = false, unique = true, columnDefinition = "TEXT")
   private String achievementName;
 
-  @Column(name = "achievement_description")
+  @Column(name = "achievement_description", columnDefinition = "TEXT")
   private String achievementDescription;
 
   @Column(name = "created_at", nullable = false, updatable = false)

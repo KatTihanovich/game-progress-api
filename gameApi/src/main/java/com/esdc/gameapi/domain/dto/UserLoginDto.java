@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserLoginDto {
   @NotBlank(message = "Password must not be blank")
-  @Size(min = 4, message = "Password must be at least 4 characters")
+  @Size(min = 3, message = "Password must be at least 3 characters")
   private String nickname;
   @NotBlank(message = "Password must not be blank")
   @Size(min = 4, message = "Password must be at least 4 characters")

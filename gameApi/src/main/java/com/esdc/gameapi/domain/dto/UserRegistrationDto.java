@@ -19,7 +19,8 @@ import lombok.NoArgsConstructor;
 public class UserRegistrationDto {
 
   @NotBlank(message = "Nickname must not be blank")
-  @Size(max = 255, message = "Nickname must be at most 255 characters")
+  @Size(min = 3, max = 255,
+      message = "Nickname must be at least 3 characters and at most 255 characters")
   private String nickname;
 
   @NotBlank(message = "Password must not be blank")

@@ -61,7 +61,7 @@ public class Progress {
   @Column(name = "solved_puzzles_number", nullable = false)
   private Integer solvedPuzzlesNumber;
 
-  @Column(name = "time_spent", nullable = false)
+  @Column(name = "time_spent", nullable = false, length = 8)
   private String timeSpent;
 
   @Column(name = "stars", nullable = false)

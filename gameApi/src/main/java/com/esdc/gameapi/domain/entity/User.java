@@ -44,7 +44,7 @@ public class User {
   @Column(name = "nickname", nullable = false, unique = true)
   private String nickname;
 
-  @Column(name = "password_hash", nullable = false)
+  @Column(name = "password_hash", nullable = false, columnDefinition = "TEXT")
   private String passwordHash;
 
   @Column(name = "age")

@@ -52,7 +52,7 @@ public class UserStatistics {
   @Column(name = "total_levels_completed", nullable = false)
   private Integer totalLevelsCompleted;
 
-  @Column(name = "total_time_played", nullable = false)
+  @Column(name = "total_time_played", nullable = false, length = 8)
   private String totalTimePlayed;
 
   @Column(name = "total_killed_enemies", nullable = false)
